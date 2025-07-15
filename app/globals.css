@@ -99,7 +99,7 @@
 }
 
 /* Smooth transitions */
-* {
+button, a, input, select, textarea {
   transition: all 0.2s ease;
 }
 
@@ -115,3 +115,6 @@ button:hover:not(:disabled) {
 button:active:not(:disabled) {
   transform: translateY(0);
 }
+
+.cm-editor { height: 100% }
+.cm-scroller { overflow: auto }
