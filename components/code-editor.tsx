@@ -1,78 +1,65 @@
-"use client"
+"use client";
 
-import type React from "react"
+import React, { useState } from "react";
+import CodeEditorCore from "./code-editor-core";
+import { StdinTextarea } from "./stdin-textarea";
+import CompileButton from "./compile-button";
 
-import { useEffect, useRef, useState } from "react"
+const defaultCode = `#include <stdio.h>
 
-interface CodeEditorProps {
-  value: string
-  onChange: (value: string) => void
-  language: string
-}
+int main() {
+    printf("Hello, World!\\n");
+    return 0;
+}`;
 
-export default function CodeEditor({ value, onChange, language }: CodeEditorProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [lineNumbers, setLineNumbers] = useState<number[]>([])
+export default function CodeEditor({
+    setOutput,
+}: {
+    setOutput: React.Dispatch<React.SetStateAction<string>>;
+}) {
+    const [isCompiling, setIsCompiling] = useState(false);
+    const [code, setCode] = useState(defaultCode);
+    const [stdin, setStdin] = useState("");
 
-  useEffect(() => {
-    const lines = value.split("\n").length
-    setLineNumbers(Array.from({ length: lines }, (_, i) => i + 1))
-  }, [value])
+    const handleCompile = async () => {
+        setIsCompiling(true);
+        setOutput("✨ Starting compilation...\n");
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(e.target.value)
-  }
+        // Simulate compilation process
+        //await new Promise((resolve) => setTimeout(resolve, 1200))
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Tab") {
-      e.preventDefault()
-      const textarea = e.currentTarget
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-      const newValue = value.substring(0, start) + "    " + value.substring(end)
-      onChange(newValue)
+        setOutput(`YOU INPUTTED: ${stdin}\n THE CODE WAS: ${code}`);
 
-      // Set cursor position after the inserted tab
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = start + 4
-      }, 0)
-    }
-  }
+        setIsCompiling(false);
+    };
 
-  return (
-    <div className="w-full h-full bg-white rounded-lg border border-slate-200 overflow-hidden">
-      <div className="flex h-full">
-        {/* Line numbers */}
-        <div className="bg-slate-50 px-3 py-4 border-r border-slate-200 select-none">
-          <div className="text-sm text-slate-500 font-mono leading-6">
-            {lineNumbers.map((num) => (
-              <div key={num} className="text-right">
-                {num}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Code editor */}
-        <div className="flex-1 relative">
-          <textarea
-            ref={textareaRef}
-            value={value}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            className="w-full h-full p-4 bg-transparent border-none outline-none resize-none font-mono text-sm leading-6 text-slate-800"
-            style={{
-              fontFamily: "'Fira Code', 'SF Mono', Consolas, monospace",
-              tabSize: 4,
-            }}
-            spellCheck={false}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            placeholder="Start typing your C code here..."
-          />
-        </div>
-      </div>
-    </div>
-  )
+    return (
+        <>
+            <div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full" />
+                    <span className="text-sm font-medium text-slate-700">
+                        main.c
+                    </span>
+                    <span className="text-xs text-slate-500 ml-2">
+                        Ready to code
+                    </span>
+                </div>
+            </div>
+            <div className="flex-1 bg-white/40 backdrop-blur-sm overflow-hidden">
+                <div className="h-full overflow-auto">
+                    <CodeEditorCore value={code} onChange={setCode} />
+                </div>
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+                <StdinTextarea stdin={stdin} setStdin={setStdin} />
+            </div>
+            <div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+                <CompileButton
+                    onCompile={handleCompile}
+                    isCompiling={isCompiling}
+                />
+            </div>
+        </>
+    );
 }
