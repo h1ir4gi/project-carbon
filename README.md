@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+To run the server with a Docker Container setup (the Docker Container stops on ctrl-d):
+
+```bash
+sh runserver.sh
+```
+
 First, run the development server:
 
 ```bash

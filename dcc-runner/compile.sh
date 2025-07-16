@@ -5,7 +5,7 @@ STDIN_FILE="$2"
 OUT_FILE="/root/program"
 
 # Try to compile
-if ! dcc "$SOURCE_FILE" -o "$OUT_FILE" 2>/root/compile_errors.txt; then
+if ! dcc -Werror "$SOURCE_FILE" -o "$OUT_FILE" 2>/root/compile_errors.txt; then
   echo "[!] Compilation failed"
   dcc-help > /root/dcc_help_output.txt || echo "[x] Failed to get dcc-help explanation"
   cat /root/dcc_help_output.txt
