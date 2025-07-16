@@ -1,0 +1,16 @@
+
+
+services:
+  dcc_help_testing: 
+    build: "."
+    volumes:
+      - "./volume:/root/volume"
+    environment:
+      # TODO: change this for deployment.
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - SHELL=/usr/bin/zsh
+      - DCC_HELPER=/usr/bin/dcc-compile-helper
+    stdin_open: true 
+    tty: true
+    cap_add:
+      - SYS_PTRACE

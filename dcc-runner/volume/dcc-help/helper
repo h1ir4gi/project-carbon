@@ -1,0 +1,83 @@
+#!/bin/bash
+
+MAX_BYTES_SOURCE_FILE=20480
+PATH=/bin:/usr/bin:$PATH
+
+what=$(basename "$0"|cut -d- -f1)
+implementation=$(basename "$0"|sed 's/-helper//')
+
+# is stderr a tty?
+if test -t 2
+then
+    ANSI_BOLD_BLACK="\e[1m"
+    ANSI_END="\e[0m"
+else
+    test "$implementation" = dcc-runtime &&
+        exit 0
+fi
+
+# don't offer help for class accounts
+case "$LOGNAME" in
+[a-z][a-z][0-9][0-9][0-9][0-9]*) exit 0
+esac
+
+case "${HELPER_EXPLANATION-"$DCC_HELPER_EXPLANATION"}" in
+*"Execution was interrupted") exit 0
+esac
+
+if test -n "$HELPER_LANGUAGE"
+then
+    language="$HELPER_LANGUAGE"
+else
+    language=C
+    case "$what" in
+    autotest)
+        case "$HELPER_FILE" in
+        *.c) language=C;;
+        *.s) language=mips;;
+        *.py) language=python;;
+        *.sh) language=shell;;
+        *) exit 0
+        esac ;;
+    mipsy)
+        language=mips
+    esac
+fi
+
+test "$language" = mips &&
+    exit 0
+
+if test -z "${HELPER_SOURCE-"$DCC_HELPER_SOURCE"}"
+then
+    source_file_size="$(stat -c '%s' "$HELPER_FILENAME" 2>/dev/null)"
+    if test -n "$source_file_size" && ((source_file_size < MAX_BYTES_SOURCE_FILE))
+    then
+        HELPER_JSON=$(
+            jq \
+                --arg source "$(cat "$HELPER_FILENAME")" \
+                '.+ {source:$source}' <<eof
+${HELPER_JSON}
+eof
+    )
+    fi
+fi
+
+set -e
+
+cache_directory="${XDG_CACHE_HOME-$HOME/.cache}"
+mkdir -p "$cache_directory" 2>/dev/null ||
+    exit 1
+jq \
+    --arg LOGNAME "$LOGNAME" \
+    --arg hostname "$(hostname)" \
+    --arg language "$language" \
+    --arg implementation "$implementation" \
+    '.+ {LOGNAME:$LOGNAME, hostname:$hostname, language:$language, implementation:$implementation}' >"$cache_directory/$what.json" <<eof
+${HELPER_JSON-"$DCC_HELPER_JSON"}
+eof
+
+understand_what=""
+test -n "$HELPER_TEST_LABEL" &&
+    understand_what=" why test $HELPER_TEST_LABEL failed"
+    
+echo -e "Don't understand$understand_what?  Get AI-generated help by running: ${ANSI_BOLD_BLACK}$what-help$ANSI_END" 1>&2
