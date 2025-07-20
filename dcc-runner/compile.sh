@@ -17,6 +17,7 @@ function run_dcc_help() {
     exit 0
   fi
 
+  echo "[?] Don't understand? Here's what dcc-help says:"
   cat "$DCC_HELP_OUTPUT"
 }
 

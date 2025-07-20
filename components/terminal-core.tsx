@@ -18,17 +18,34 @@ export default function Terminal({ output }: TerminalProps) {
   const formatOutput = (text: string) => {
     const lines = text.split("\n")
     return lines.map((line, index) => {
-      // Success messages
-      if (line.includes("✅") || line.includes("🎉")) {
+      if (line.startsWith("Don't understand?")) {
         return (
-          <div key={index} className="text-emerald-600 font-medium py-1">
+          <div key={index} className="text-slate-700 py-0.5"/>
+        )
+      }
+      // replace program name with main.c
+      if (line.includes("/tmp/program.c")) {
+        line = line.replace("/tmp/program.c", "main.c")
+      }
+      // Success messages
+      if (line.startsWith("[!]")) {
+        return (
+          <div key={index} className="text-red-600 py-1 font-bold">
+            {line}
+          </div>
+        )
+      }
+
+      if (line.startsWith("[?]")) {
+        return (
+          <div key={index} className="text-emerald-600 py-1 font-bold">
             {line}
           </div>
         )
       }
 
       // Error messages
-      if (line.includes("❌") || line.includes("error:")) {
+      if (line.includes("error:")) {
         return (
           <div key={index} className="text-red-500 font-medium py-1">
             {formatLineWithSyntax(line)}
@@ -37,7 +54,7 @@ export default function Terminal({ output }: TerminalProps) {
       }
 
       // Warning messages
-      if (line.includes("⚠️") || line.includes("warning:")) {
+      if (line.includes("warning:")) {
         return (
           <div key={index} className="text-amber-600 font-medium py-1">
             {formatLineWithSyntax(line)}
@@ -45,8 +62,8 @@ export default function Terminal({ output }: TerminalProps) {
         )
       }
 
-      // Info messages with emojis
-      if (line.includes("🔧") || line.includes("🚀") || line.includes("📊") || line.includes("💡")) {
+      // Info messages from dcc-help
+      if (line.startsWith("#")) {
         return (
           <div key={index} className="text-blue-600 font-medium py-1">
             {line}
@@ -145,7 +162,7 @@ export default function Terminal({ output }: TerminalProps) {
   return (
     <div
       ref={terminalRef}
-      className="h-full bg-white/60 backdrop-blur-sm text-slate-700 text-l p-6 overflow-y-auto rounded-lg font-mono"
+      className="h-full bg-white/60 backdrop-blur-sm text-slate-700 text-sm p-12 overflow-y-auto rounded-lg font-mono"
     >
       {output ? (
         <div className="space-y-1">{formatOutput(output)}</div>
