@@ -18,6 +18,9 @@ RUN apt install -y python3-pip
 # This is probably bad
 RUN python3 -m pip install --break-system-packages  ollama
 
+# set env for ollama
+ENV OLLAMA_HOST=http://host.docker.internal:11434
+
 # Install dcc
 RUN curl -L https://github.com/COMP1511UNSW/dcc/releases/download/2.37/dcc_2.37_all.deb -o /tmp/dcc_2.37_all.deb && apt install /tmp/dcc_2.37_all.deb
 

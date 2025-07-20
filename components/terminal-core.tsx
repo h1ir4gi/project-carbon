@@ -145,7 +145,7 @@ export default function Terminal({ output }: TerminalProps) {
   return (
     <div
       ref={terminalRef}
-      className="h-full bg-white/60 backdrop-blur-sm text-slate-700 text-xl p-6 overflow-y-auto rounded-lg font-mono"
+      className="h-full bg-white/60 backdrop-blur-sm text-slate-700 text-l p-6 overflow-y-auto rounded-lg font-mono"
     >
       {output ? (
         <div className="space-y-1">{formatOutput(output)}</div>

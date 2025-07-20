@@ -12,7 +12,7 @@ export async function runUserCodeInDocker(source: string, stdin: string): Promis
     const stdinBase64 = Buffer.from(stdin, "utf8").toString("base64");
 
     const dockerCmd = `
-        docker run --rm --network none dcc-runner-dcc_help_testing sh -c '
+        docker run --rm dcc-runner-dcc_help_testing sh -c '
             echo "${sourceBase64}" | base64 -d > /tmp/program.c &&
             echo "${stdinBase64}" | base64 -d > /tmp/stdin.txt &&
             /root/compile.sh /tmp/program.c /tmp/stdin.txt
