@@ -6,7 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "./runserver.sh"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.18.6",

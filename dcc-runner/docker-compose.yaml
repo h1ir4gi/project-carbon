@@ -7,10 +7,10 @@ services:
       - "./volume:/root/volume"
     environment:
       # TODO: change this for deployment.
-      - OLLAMA_HOST=http://host.docker.internal:11434
+      - OLLAMA_HOST=http://host.docker.internal:11434 ## potential problems with exposing this? 
       - SHELL=/usr/bin/zsh
       - DCC_HELPER=/usr/bin/dcc-compile-helper
     stdin_open: true 
-    tty: true
+    tty: true # apparently we don't need tty or stdin_open to use stdin and tty in the container, since everything is passed using files, so it can be run non-interactively
     cap_add:
-      - SYS_PTRACE
+      - SYS_PTRACE # apparently dangerous to include when running containers dynamically

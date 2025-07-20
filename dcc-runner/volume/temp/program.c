@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 int main() {
-    while (1) {printf("Hello, World!\n"); }
-    printf("Hello, World!\n");
+    printf("Hello, World!);
     return 0;
 }
