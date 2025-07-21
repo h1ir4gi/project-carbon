@@ -7,14 +7,14 @@ what=$(basename "$0"|cut -d- -f1)
 implementation=$(basename "$0"|sed 's/-helper//')
 
 # is stderr a tty?
-if test -t 2
-then
+# if test -t 2
+# then
     ANSI_BOLD_BLACK="\e[1m"
     ANSI_END="\e[0m"
 # else
 #     test "$implementation" = dcc-runtime &&
 #         exit 0
-fi
+# fi
 
 # don't offer help for class accounts
 # case "$LOGNAME" in

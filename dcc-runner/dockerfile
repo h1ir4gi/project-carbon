@@ -39,6 +39,9 @@ RUN chmod +x /root/compile.sh
 
 WORKDIR /root
 
+# Ask dcc to always colour output
+ENV DCC_COLORIZE_OUTPUT=TRUE
+
 # Optional:
 # RUN apt install -y zsh
 # COPY zshrc /root/.zshrc
