@@ -36,12 +36,14 @@ export default function CodeEditor({
           const err = await response.json();
           setOutput(`❌ Error: ${err.error || "Unknown error"}`);
         } else {
-          const data = await response.json();
-          // Assuming data looks like { compile_status, output, errors }
-          if (data.compile_status === "success") {
-            setOutput(data.output);
-          } else {
-            setOutput(`Compilation Error:\n${data.error_details.compiler_message}`);
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+          if (reader) {
+            let { done, value } = await reader.read();
+            while (!done) {
+                setOutput(prev => prev + decoder.decode(value));
+              ({done, value} = await reader.read());
+            }
           }
         }
       } catch (error: unknown) {

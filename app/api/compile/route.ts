@@ -9,8 +9,8 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const result = await runUserCodeInDocker(source, stdin)
-        return NextResponse.json(result)
+        const stream = await runUserCodeInDocker(source, stdin)
+        return new NextResponse(stream);
     } catch (error: any) {
         return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
     }
