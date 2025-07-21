@@ -24,15 +24,15 @@ ENV OLLAMA_HOST=http://host.docker.internal:11434
 # Install dcc
 RUN curl -L https://github.com/COMP1511UNSW/dcc/releases/download/2.37/dcc_2.37_all.deb -o /tmp/dcc_2.37_all.deb && apt install /tmp/dcc_2.37_all.deb
 
-# ENV PATH "$PATH:/root/volume/bin"
+# ENV PATH "$PATH:/root/bin"
 
-RUN ln -s /root/volume/dcc-help/dcc-help /usr/bin/
-RUN ln -s /root/volume/dcc-help/query_chatgpt.py /usr/bin/
-RUN ln -s /root/volume/dcc-help/helper /usr/bin/dcc-compile-helper
-RUN ln -s /root/volume/dcc-help/helper /usr/bin/dcc-runtime-helper
-# TODO: ensure files are CHMOD correctly.
-COPY volume/dcc-help /root/volume/dcc-help
-RUN chmod +x /root/volume/dcc-help/dcc-help /root/volume/dcc-help/query_chatgpt.py /root/volume/dcc-help/helper
+COPY dcc-help /root/dcc-help
+RUN chmod +x /root/dcc-help/dcc-help /root/dcc-help/query_chatgpt.py /root/dcc-help/helper
+
+RUN ln -s /root/dcc-help/dcc-help /usr/bin/
+RUN ln -s /root/dcc-help/query_chatgpt.py /usr/bin/
+RUN ln -s /root/dcc-help/helper /usr/bin/dcc-compile-helper
+RUN ln -s /root/dcc-help/helper /usr/bin/dcc-runtime-helper
 
 COPY compile.sh /root/compile.sh
 RUN chmod +x /root/compile.sh
@@ -40,5 +40,5 @@ RUN chmod +x /root/compile.sh
 WORKDIR /root
 
 # Optional:
-RUN apt install -y zsh
-COPY zshrc /root/.zshrc
+# RUN apt install -y zsh
+# COPY zshrc /root/.zshrc
