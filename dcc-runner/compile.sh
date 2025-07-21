@@ -1,8 +1,14 @@
 #!/bin/bash
 
-SOURCE_FILE="$1"
-STDIN_FILE="$2"
+SOURCE_FILE="main.c"
+STDIN_FILE="stdin"
 OUT_FILE="/tmp/out"
+
+read -r json
+
+echo "$json" | jq -r '.source' > $SOURCE_FILE
+echo "$json" | jq -r '.stdin' > $STDIN_FILE
+
 
 PROGRAM_OUTPUT="/tmp/program_output.txt"
 PROGRAM_ERRORS="/tmp/program_errors.txt"

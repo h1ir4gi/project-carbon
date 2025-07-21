@@ -8,19 +8,15 @@ type CompileResult = {
 
 export async function runUserCodeInDocker(source: string, stdin: string): Promise<CompileResult> {
     // Convert both strings to base64 so they can safely be reconstructed in the container
-    const sourceBase64 = Buffer.from(source, "utf8").toString("base64");
-    const stdinBase64 = Buffer.from(stdin, "utf8").toString("base64");
+    // const sourceBase64 = Buffer.from(source, "utf8").toString("base64");
+    // const stdinBase64 = Buffer.from(stdin, "utf8").toString("base64");
 
-    const dockerCmd = `
-        docker run --rm dcc-runner-dcc_help_testing sh -c '
-            echo "${sourceBase64}" | base64 -d > /tmp/program.c &&
-            echo "${stdinBase64}" | base64 -d > /tmp/stdin.txt &&
-            /root/compile.sh /tmp/program.c /tmp/stdin.txt
-        '
-    `;
+    const input = JSON.stringify({source, stdin});
+
+    const dockerCmd = "docker run -i --rm dcc-runner-dcc_help_testing /root/compile.sh";
 
     return new Promise((resolve) => {
-        exec(dockerCmd, { maxBuffer: 1024 * 1000 }, (error, stdout, stderr) => {
+        const child = exec(dockerCmd, { maxBuffer: 1024 * 1000 }, (error, stdout, stderr) => {
             if (error) {
                 return resolve({
                     compile_status: "error",
@@ -32,5 +28,8 @@ export async function runUserCodeInDocker(source: string, stdin: string): Promis
                 output: stdout,
             });
         });
+        child.stdin?.write(input + "\n")
+        child.stdin?.end()
     });
+
 }
