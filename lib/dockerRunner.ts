@@ -11,23 +11,33 @@ type CompileResult = {
 export function runUserCodeInDocker(source: string, stdin: string) {
     const input = JSON.stringify({source, stdin});
 
-    const proc = spawn("docker", ["run", "-i", "--rm", "dcc-runner-dcc_help_testing", "/root/compile.sh"]);
+    const proc = spawn(
+      "docker",
+      ["run", 
+        "-m", "120m",
+        "--memory-swap", "120m",
+        "-i", "dcc-runner-dcc_help_testing", "/root/compile.sh"], 
+      { timeout: 30000, killSignal:"SIGKILL" }
+    );
     proc.stdin?.write(input + "\n");
     proc.stdin?.end();
 
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       start(controller) {
-        const send = (chunk: Buffer) => {
+        const send = (chunk: string) => {
           controller.enqueue(
-            encoder.encode(chunk.toString())
+            encoder.encode(chunk)
           );
         };
 
-        proc.stdout.on("data", (c) => send(c));
-        proc.stderr.on("data", (c) => send(c));
+        proc.stdout.on("data", (c) => send(c.toString()));
+        proc.stderr.on("data", (c) => send(c.toString()));
 
-        proc.on("exit", (_code) => {
+        proc.on("exit", (_code, signal) => {
+          if(signal !== null) {
+            send("\n[!] Process timed out!\n");
+          }
           controller.close();
         });
       },

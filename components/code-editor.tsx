@@ -41,9 +41,10 @@ export default function CodeEditor({
           if (reader) {
             let { done, value } = await reader.read();
             while (!done) {
-                setOutput(prev => prev + decoder.decode(value));
-              ({done, value} = await reader.read());
-            }
+                const text = decoder.decode(value);
+                setOutput(prev => prev + text);
+                ({done, value} = await reader.read());
+              }
           }
         }
       } catch (error: unknown) {
