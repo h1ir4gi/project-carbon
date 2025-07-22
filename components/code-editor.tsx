@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import CodeEditorCore from "./code-editor-core";
 import { StdinTextarea } from "./stdin-textarea";
 import CompileButton from "./compile-button";
+import { examplePrograms } from "./example-programs";
+import DropdownMenu from "./dropdown-menu";
 
 const defaultCode = `#include <stdio.h>
 
@@ -19,7 +21,18 @@ export default function CodeEditor({
 }) {
     const [isCompiling, setIsCompiling] = useState(false);
     const [code, setCode] = useState(defaultCode);
-    const [stdin, setStdin] = useState("");
+	const [stdin, setStdin] = useState("");
+	const [selectedExample, setSelectedExample] = useState("")
+
+	const handleExampleSelect = (exampleKey: string) => {
+		if (exampleKey && examplePrograms[exampleKey as keyof typeof examplePrograms]) {
+			const example = examplePrograms[exampleKey as keyof typeof examplePrograms]
+			setCode(example.code)
+			setStdin(example.stdin)
+			setSelectedExample(exampleKey)
+			setOutput("") 
+		}
+	}
 
     const handleCompile = async () => {
       setIsCompiling(true);
@@ -57,17 +70,16 @@ export default function CodeEditor({
 
     return (
         <>
-            <div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
-                <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full" />
-                    <span className="text-sm font-medium text-slate-700">
-                        main.c
-                    </span>
-                    <span className="text-xs text-slate-500 ml-2">
-                        Ready to code
-                    </span>
-                </div>
-            </div>
+			<div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
+				<div className="flex items-center gap-2">
+					<div className="w-2 h-2 bg-green-400 rounded-full" />
+					<span className="text-sm font-medium text-slate-700">main.c</span>
+					<span className="text-xs text-slate-500 ml-2">Ready to code</span>
+					<div className="ml-auto">
+						<DropdownMenu selectedExample={selectedExample} handleExampleSelect={handleExampleSelect} />
+					</div>
+				</div>
+			</div>
             <div className="flex-1 bg-white/40 backdrop-blur-sm overflow-hidden">
                 <div className="h-full overflow-auto">
                     <CodeEditorCore value={code} onChange={setCode} />
