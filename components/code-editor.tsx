@@ -69,7 +69,7 @@ export default function CodeEditor({
     };
 
     return (
-        <>
+		<>
 			<div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
 				<div className="flex items-center gap-2">
 					<div className="w-2 h-2 bg-green-400 rounded-full" />
@@ -80,20 +80,18 @@ export default function CodeEditor({
 					</div>
 				</div>
 			</div>
-            <div className="flex-1 bg-white/40 backdrop-blur-sm overflow-hidden">
-                <div className="h-full overflow-auto">
-                    <CodeEditorCore value={code} onChange={setCode} />
-                </div>
-            </div>
-            <div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
-                <StdinTextarea stdin={stdin} setStdin={setStdin} />
-            </div>
-            <div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
-                <CompileButton
-                    onCompile={handleCompile}
-                    isCompiling={isCompiling}
-                />
-            </div>
+			<div className="h-full overflow-auto">
+				<CodeEditorCore value={code} onChange={setCode} />
+			</div>
+			<div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+				<StdinTextarea stdin={stdin} setStdin={setStdin} />
+			</div>
+			<div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+				<CompileButton
+					onCompile={handleCompile}
+					isCompiling={isCompiling}
+				/>
+			</div>
         </>
     );
 }

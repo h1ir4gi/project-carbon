@@ -1,3 +1,5 @@
+const maxCharLimit = 100;
+
 export function StdinTextarea({
     stdin,
     setStdin,
@@ -21,7 +23,11 @@ export function StdinTextarea({
             <div className="p-4">
                 <textarea
                     value={stdin}
-                    onChange={(e) => setStdin(e.target.value)}
+                    onChange={(e) => {
+                        if (e.target.value.length <= maxCharLimit) {
+                            setStdin(e.target.value);
+                        }
+                    }}
                     className="w-full h-20 p-3 bg-white border border-slate-200 rounded-lg text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter input for your program here (e.g., numbers, text)..."
                     style={{
