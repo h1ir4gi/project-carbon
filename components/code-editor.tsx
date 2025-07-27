@@ -19,8 +19,8 @@ export default function CodeEditor({
 }: {
     setOutput: React.Dispatch<React.SetStateAction<string>>;
 }) {
-    const [isCompiling, setIsCompiling] = useState(false);
-    const [code, setCode] = useState(defaultCode);
+	const [isCompiling, setIsCompiling] = useState(false);
+	const [code, setCode] = useState(defaultCode);
 	const [stdin, setStdin] = useState("");
 	const [selectedExample, setSelectedExample] = useState("")
 
@@ -68,7 +68,7 @@ export default function CodeEditor({
       }
     };
 
-    return (
+	return (
 		<>
 			<div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
 				<div className="flex items-center gap-2">
@@ -92,6 +92,6 @@ export default function CodeEditor({
 					isCompiling={isCompiling}
 				/>
 			</div>
-        </>
-    );
+		</>
+	);
 }

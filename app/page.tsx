@@ -15,7 +15,6 @@ export default function CodeEditorApp() {
                 <div className="flex-1 flex flex-col overflow-hidden">
                     <CodeEditor setOutput={setOutput} />
                 </div>
-                
                 <div className="flex-1 flex flex-col border-l border-slate-200/60">
                     <Terminal output={output} />
                 </div>
