@@ -22,15 +22,37 @@ export default function CodeEditor({
     const [stdin, setStdin] = useState("");
 
     const handleCompile = async () => {
-        setIsCompiling(true);
-        setOutput("✨ Starting compilation...\n");
+      setIsCompiling(true);
+      setOutput("✨ Starting compilation...\n");
 
-        // Simulate compilation process
-        //await new Promise((resolve) => setTimeout(resolve, 1200))
+      try {
+        const response = await fetch("/api/compile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ source: code, stdin }),
+        });
 
-        setOutput(`YOU INPUTTED: ${stdin}\n THE CODE WAS: ${code}`);
-
+        if (!response.ok) {
+          const err = await response.json();
+          setOutput(`❌ Error: ${err.error || "Unknown error"}`);
+        } else {
+          const data = await response.json();
+          // Assuming data looks like { compile_status, output, errors }
+          if (data.compile_status === "success") {
+            setOutput(data.output);
+          } else {
+            setOutput(`Compilation Error:\n${data.error_details.compiler_message}`);
+          }
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setOutput(`❌ Unexpected error: ${error.message}`);
+        } else {
+          setOutput("❌ An unknown error occurred.");
+        }
+      } finally {
         setIsCompiling(false);
+      }
     };
 
     return (

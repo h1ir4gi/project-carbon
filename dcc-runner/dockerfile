@@ -1,0 +1,44 @@
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get -y dist-upgrade --no-install-recommends
+# RUN apt-get update && apt-get -y dist-upgrade --no-install-recommends && \
+#     apt-get install -y build-essential
+
+RUN apt install -y curl
+
+RUN apt install -y python3 clang valgrind gcc gdb
+RUN apt install -y jq
+RUN apt update
+
+
+# Install ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+RUN apt install -y python3-pip
+# This is probably bad
+RUN python3 -m pip install --break-system-packages  ollama
+
+# set env for ollama
+ENV OLLAMA_HOST=http://host.docker.internal:11434
+
+# Install dcc
+RUN curl -L https://github.com/COMP1511UNSW/dcc/releases/download/2.37/dcc_2.37_all.deb -o /tmp/dcc_2.37_all.deb && apt install /tmp/dcc_2.37_all.deb
+
+# ENV PATH "$PATH:/root/bin"
+
+COPY dcc-help /root/dcc-help
+RUN chmod +x /root/dcc-help/dcc-help /root/dcc-help/query_chatgpt.py /root/dcc-help/helper
+
+RUN ln -s /root/dcc-help/dcc-help /usr/bin/
+RUN ln -s /root/dcc-help/query_chatgpt.py /usr/bin/
+RUN ln -s /root/dcc-help/helper /usr/bin/dcc-compile-helper
+RUN ln -s /root/dcc-help/helper /usr/bin/dcc-runtime-helper
+
+COPY compile.sh /root/compile.sh
+RUN chmod +x /root/compile.sh
+
+WORKDIR /root
+
+# Optional:
+# RUN apt install -y zsh
+# COPY zshrc /root/.zshrc

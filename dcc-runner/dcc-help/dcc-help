@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PATH=/bin:/usr/bin:"$PATH"
+what=$(basename "$0"|cut -d- -f1)
+saved_json="${XDG_CACHE_HOME-$HOME/.cache}/$what.json"
+# response_json="${XDG_CACHE_HOME-$HOME/.cache}/$what.response.json"
+
+if test ! -s "$saved_json" 
+then
+    echo "$0: nothing recorded to explain" 1>&2
+    exit 1
+fi
+
+# info for sidekick will be written to file-descriptor 3
+exec query_chatgpt.py <"$saved_json"
