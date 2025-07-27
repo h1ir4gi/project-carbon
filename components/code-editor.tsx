@@ -52,45 +52,45 @@ export default function CodeEditor({
             const data = await response.json();
             // Assuming data looks like { compile_status, output, errors }
             if (data.compile_status === "success") {
-            setOutput(data.output);
+                setOutput(data.output);
             } else {
-            setOutput(`Compilation Error:\n${data.error_details.compiler_message}`);
+                setOutput(`Compilation Error:\n${data.error_details.compiler_message}`);
             }
         }
         } catch (error: unknown) {
-        if (error instanceof Error) {
-            setOutput(`❌ Unexpected error: ${error.message}`);
-        } else {
-            setOutput("❌ An unknown error occurred.");
-        }
+            if (error instanceof Error) {
+                setOutput(`❌ Unexpected error: ${error.message}`);
+            } else {
+                setOutput("❌ An unknown error occurred.");
+            }
         } finally {
-        setIsCompiling(false);
+            setIsCompiling(false);
         }
     };
 
     return (
     <>
         <div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
-        <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full" />
-            <span className="text-sm font-medium text-slate-700">main.c</span>
-            <span className="text-xs text-slate-500 ml-2">Ready to code</span>
-            <div className="ml-auto">
-            <DropdownMenu selectedExample={selectedExample} handleExampleSelect={handleExampleSelect} />
+            <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full" />
+                    <span className="text-sm font-medium text-slate-700">main.c</span>
+                    <span className="text-xs text-slate-500 ml-2">Ready to code</span>
+                    <div className="ml-auto">
+                        <DropdownMenu selectedExample={selectedExample} handleExampleSelect={handleExampleSelect} />
+                    </div>
+                </div>
             </div>
-        </div>
-        </div>
-        <div className="h-full overflow-auto">
-        <CodeEditorCore value={code} onChange={setCode} />
-        </div>
-        <div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
-        <StdinTextarea stdin={stdin} setStdin={setStdin} />
-        </div>
-        <div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
-        <CompileButton
-            onCompile={handleCompile}
-            isCompiling={isCompiling}
-        />
+            <div className="h-full overflow-auto">
+                <CodeEditorCore value={code} onChange={setCode} />
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+                <StdinTextarea stdin={stdin} setStdin={setStdin} />
+            </div>
+            <div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+                <CompileButton
+                    onCompile={handleCompile}
+                    isCompiling={isCompiling}
+                />
         </div>
     </>
     );
