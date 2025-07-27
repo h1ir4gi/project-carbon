@@ -68,30 +68,30 @@ export default function CodeEditor({
       }
     };
 
-	return (
-		<>
-			<div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
-				<div className="flex items-center gap-2">
-					<div className="w-2 h-2 bg-green-400 rounded-full" />
-					<span className="text-sm font-medium text-slate-700">main.c</span>
-					<span className="text-xs text-slate-500 ml-2">Ready to code</span>
-					<div className="ml-auto">
-						<DropdownMenu selectedExample={selectedExample} handleExampleSelect={handleExampleSelect} />
-					</div>
-				</div>
-			</div>
-			<div className="h-full overflow-auto">
-				<CodeEditorCore value={code} onChange={setCode} />
-			</div>
-			<div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
-				<StdinTextarea stdin={stdin} setStdin={setStdin} />
-			</div>
-			<div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
-				<CompileButton
-					onCompile={handleCompile}
-					isCompiling={isCompiling}
-				/>
-			</div>
-		</>
-	);
+  return (
+    <>
+      <div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full" />
+          <span className="text-sm font-medium text-slate-700">main.c</span>
+          <span className="text-xs text-slate-500 ml-2">Ready to code</span>
+          <div className="ml-auto">
+            <DropdownMenu selectedExample={selectedExample} handleExampleSelect={handleExampleSelect} />
+          </div>
+        </div>
+      </div>
+      <div className="h-full overflow-auto">
+        <CodeEditorCore value={code} onChange={setCode} />
+      </div>
+      <div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+        <StdinTextarea stdin={stdin} setStdin={setStdin} />
+      </div>
+      <div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
+        <CompileButton
+          onCompile={handleCompile}
+          isCompiling={isCompiling}
+        />
+      </div>
+    </>
+  );
 }
