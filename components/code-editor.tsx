@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import CodeEditorCore from "./code-editor-core";
 import { StdinTextarea } from "./stdin-textarea";
 import CompileButton from "./compile-button";
+import { examplePrograms } from "./example-programs";
+import DropdownMenu from "./dropdown-menu";
 
 const defaultCode = `#include <stdio.h>
 
@@ -20,58 +22,66 @@ export default function CodeEditor({
     const [isCompiling, setIsCompiling] = useState(false);
     const [code, setCode] = useState(defaultCode);
     const [stdin, setStdin] = useState("");
+    const [selectedExample, setSelectedExample] = useState("")
+
+    const handleExampleSelect = (exampleKey: string) => {
+        if (exampleKey && examplePrograms[exampleKey as keyof typeof examplePrograms]) {
+            const example = examplePrograms[exampleKey as keyof typeof examplePrograms]
+            setCode(example.code)
+            setStdin(example.stdin)
+            setSelectedExample(exampleKey)
+            setOutput("") 
+        }
+    }
 
     const handleCompile = async () => {
-      setIsCompiling(true);
-      setOutput("✨ Starting compilation...\n");
+        setIsCompiling(true);
+        setOutput("✨ Starting compilation...\n");
 
-      try {
+        try {
         const response = await fetch("/api/compile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ source: code, stdin }),
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ source: code, stdin }),
         });
 
         if (!response.ok) {
-          const err = await response.json();
-          setOutput(`❌ Error: ${err.error || "Unknown error"}`);
+            const err = await response.json();
+            setOutput(`❌ Error: ${err.error || "Unknown error"}`);
         } else {
-          const data = await response.json();
-          // Assuming data looks like { compile_status, output, errors }
-          if (data.compile_status === "success") {
-            setOutput(data.output);
-          } else {
-            setOutput(`Compilation Error:\n${data.error_details.compiler_message}`);
-          }
+            const data = await response.json();
+            // Assuming data looks like { compile_status, output, errors }
+            if (data.compile_status === "success") {
+                setOutput(data.output);
+            } else {
+                setOutput(`Compilation Error:\n${data.error_details.compiler_message}`);
+            }
         }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setOutput(`❌ Unexpected error: ${error.message}`);
-        } else {
-          setOutput("❌ An unknown error occurred.");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setOutput(`❌ Unexpected error: ${error.message}`);
+            } else {
+                setOutput("❌ An unknown error occurred.");
+            }
+        } finally {
+            setIsCompiling(false);
         }
-      } finally {
-        setIsCompiling(false);
-      }
     };
 
     return (
-        <>
-            <div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
-                <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full" />
-                    <span className="text-sm font-medium text-slate-700">
-                        main.c
-                    </span>
-                    <span className="text-xs text-slate-500 ml-2">
-                        Ready to code
-                    </span>
+    <>
+        <div className="bg-white/60 backdrop-blur-sm px-6 py-3 border-b border-slate-200/60">
+            <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full" />
+                    <span className="text-sm font-medium text-slate-700">main.c</span>
+                    <span className="text-xs text-slate-500 ml-2">Ready to code</span>
+                    <div className="ml-auto">
+                        <DropdownMenu selectedExample={selectedExample} handleExampleSelect={handleExampleSelect} />
+                    </div>
                 </div>
             </div>
-            <div className="flex-1 bg-white/40 backdrop-blur-sm overflow-hidden">
-                <div className="h-full overflow-auto">
-                    <CodeEditorCore value={code} onChange={setCode} />
-                </div>
+            <div className="h-full overflow-auto">
+                <CodeEditorCore value={code} onChange={setCode} />
             </div>
             <div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
                 <StdinTextarea stdin={stdin} setStdin={setStdin} />
@@ -81,7 +91,7 @@ export default function CodeEditor({
                     onCompile={handleCompile}
                     isCompiling={isCompiling}
                 />
-            </div>
-        </>
+        </div>
+    </>
     );
 }
