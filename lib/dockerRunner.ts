@@ -11,8 +11,12 @@ export async function runUserCodeInDocker(source: string, stdin: string): Promis
     const sourceBase64 = Buffer.from(source, "utf8").toString("base64");
     const stdinBase64 = Buffer.from(stdin, "utf8").toString("base64");
 
+    // memory limit  = 128mb for standard
+    // cpu limit = 0.5 for single-threaded programs, which is the case for beginner C programs
+    // setting memory-swap to the same value as memory avoids container from using swap memory
+    // using --rm to automatically remove the container after it exits
     const dockerCmd = `
-        docker run --rm dcc-runner-dcc_help_testing sh -c '
+        docker run --rm --memory=128mb --memory-swap=128m --cpus='0.5' dcc-runner-dcc_help_testing sh -c '
             echo "${sourceBase64}" | base64 -d > /tmp/program.c &&
             echo "${stdinBase64}" | base64 -d > /tmp/stdin.txt &&
             /root/compile.sh /tmp/program.c /tmp/stdin.txt
