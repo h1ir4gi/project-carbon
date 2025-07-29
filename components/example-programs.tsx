@@ -1,26 +1,44 @@
 export const examplePrograms = {
-    "hello-world": {
-        name: "Hello World",
+    "use-after-free": {
+        name: "Use After Free",
         code: `#include <stdio.h>
-                    
+#include <stdlib.h>
+
+struct node {
+    int val;
+    struct node *next;
+};
+
 int main() {
-    printf("Hello, World!\\n");
+    struct node *head = malloc(sizeof(struct node));
+    head->val = 5; 
+    head->next = NULL;
+    free(head);
+
+    printf("Value: %d\\n", head->val);
     return 0;
 }`,
         stdin: "",
     },
-    "input-example": {
-        name: "Input Example",
+    "null-pointer-access": {
+        name: "NULL Pointer",
         code: `#include <stdio.h>
-                    
+#include <stdlib.h>
+
+struct node {
+    int val;
+    struct node *next;
+};
+
 int main() {
-    int number;
-    printf("Enter a number: ");
-    scanf("%d", &number);
-    printf("\\nYou entered: %d\\n", number);
+    struct node *head = NULL;
+    head->val = 5; 
+    head->next = NULL;
+
+    printf("Value: %d\\n", head->val);
     return 0;
 }`,
-        stdin: "42",
+        stdin: "",
     },
     "syntax-error": {
         name: "Syntax Error",
@@ -32,7 +50,7 @@ int main() {
 }`,
         stdin: "",
     },
-    "undeclared-variable": {
+    "uninitialized-variable": {
         name: "Uninitialized Variable",
         code: `#include <stdio.h>
                     
@@ -44,7 +62,7 @@ int main() {
         stdin: "",
     },
     "division-by-zero": {
-        name: "Runtime Warning",
+        name: "Divide by Zero",
         code: `#include <stdio.h>
                     
 int main() {
@@ -56,7 +74,7 @@ int main() {
         stdin: "",
     },
     "missing-include": {
-        name: "Missing Include Error",
+        name: "Missing Include",
         code: `int main() {
     printf("Hello, World!\\n");
     return 0;
