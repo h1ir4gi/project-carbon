@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 const maxCharLimit = 100;
 
 export function StdinTextarea({
@@ -26,6 +28,17 @@ export function StdinTextarea({
                     onChange={(e) => {
                         if (e.target.value.length <= maxCharLimit) {
                             setStdin(e.target.value);
+                        } else {
+                            toast.error("stdin character limit reached", {
+                                id: "character-limit-error",
+                                position: "bottom-right",
+                                style: {
+                                    backgroundColor: "#ffe0e0",
+                                    color: "#c00",
+                                    border: "1px solid #c00",
+                                    fontSize: "14px",
+                                  },
+                            });
                         }
                     }}
                     className="w-full h-20 p-3 bg-white border border-slate-200 rounded-lg text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
