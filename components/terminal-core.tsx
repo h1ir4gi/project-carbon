@@ -73,12 +73,35 @@ export default function Terminal({ output }: TerminalProps) {
       } 
 
       // Default formatting
+      const result = formatLineWithSyntax(line);
       return (
         <div key={index} className="text-slate-700 py-0.5">
-          {formatLineWithSyntax(line)}
+          {typeof result === "string" ? formatLine(result) : result}
         </div>
       )
     })
+  }
+
+  // Formats dcc's explanation for words between backticks and asterisks
+  const formatLine = (line: string): (string | JSX.Element)[] => {
+    return line
+      .split(/(`[^`]+`|\*[^*]+\*)/g)
+      .map((part, i) => {
+        if (part.startsWith("`") && part.endsWith("`")) {
+          return (
+            <code key={i} className="bg-gray-100 text-black-900 px-1 rounded font-nomral text-sm">
+              {part.slice(1, -1)}
+            </code>
+          );
+        } else if (part.startsWith("*") && part.endsWith("*")) {
+          return (
+            <strong key={i} className="font-semibold">
+              {part.slice(1, -1)}
+            </strong>
+          );
+        }
+        return part;
+      });
   }
 
   const formatLineWithSyntax = (line: string) => {
