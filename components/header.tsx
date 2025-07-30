@@ -11,7 +11,7 @@ export default function Header() {
                         <Code className="w-4 h-4 text-white" />
                     </div>
                     <h1 className="text-xl font-semibold text-slate-800">
-                        PROJECT CARBON
+                        DCC-HELP
                     </h1>
                 </div>
                 <div className="ml-auto flex items-center gap-2 text-sm text-slate-600">
