@@ -6,7 +6,7 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends \
         curl python3 clang valgrind \
         libclang-common-14-dev libclang-rt-14-dev \
-        gcc gdb jq python3-pip bash
+        gcc gdb jq python3-pip
 
 # Install ollama
 RUN curl -fsSL https://ollama.com/install.sh | sh \
@@ -26,6 +26,9 @@ RUN chmod 755 /opt/dcc-help/dcc-help /opt/dcc-help/query_chatgpt.py /opt/dcc-hel
  && ln -s /opt/dcc-help/helper            /usr/bin/dcc-compile-helper \
  && ln -s /opt/dcc-help/helper            /usr/bin/dcc-runtime-helper
 
+# Might be able to remove this later:
+RUN apt-get install -y busybox
+
 COPY compile.sh /opt/compile.sh
 RUN chmod 755 /opt/compile.sh
 RUN mkdir -p /tmp && chmod 1777 /tmp
@@ -39,6 +42,7 @@ COPY --from=build /lib  /lib
 COPY --from=build /lib64 /lib64  
 COPY --from=build /opt /opt
 COPY --from=build /bin/bash /bin/bash
+COPY --from=build /bin/sh /bin/sh
 
 COPY --from=build /tmp /tmp
 
