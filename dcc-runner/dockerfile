@@ -1,44 +1,51 @@
-FROM debian:bookworm-slim
+FROM debian:12-slim AS build
 
-RUN apt-get update && apt-get -y dist-upgrade --no-install-recommends
-# RUN apt-get update && apt-get -y dist-upgrade --no-install-recommends && \
-#     apt-get install -y build-essential
-
-RUN apt install -y curl
-
-RUN apt install -y python3 clang valgrind gcc gdb
-RUN apt install -y jq
-RUN apt update
-
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+ && apt-get -y dist-upgrade --no-install-recommends \
+ && apt-get install -y --no-install-recommends \
+        curl python3 clang valgrind \
+        libclang-common-14-dev libclang-rt-14-dev \
+        gcc gdb jq python3-pip bash
 
 # Install ollama
-RUN curl -fsSL https://ollama.com/install.sh | sh
+RUN curl -fsSL https://ollama.com/install.sh | sh \
+ && python3 -m pip install --break-system-packages ollama
 
-RUN apt install -y python3-pip
-# This is probably bad
-RUN python3 -m pip install --break-system-packages  ollama
-
-# set env for ollama
-ENV OLLAMA_HOST=http://host.docker.internal:11434
 
 # Install dcc
-RUN curl -L https://github.com/COMP1511UNSW/dcc/releases/download/2.37/dcc_2.37_all.deb -o /tmp/dcc_2.37_all.deb && apt install /tmp/dcc_2.37_all.deb
+RUN curl -L https://github.com/COMP1511UNSW/dcc/releases/download/2.37/dcc_2.37_all.deb \
+         -o /tmp/dcc.deb \
+ && apt-get install -y --no-install-recommends /tmp/dcc.deb \
+ && rm /tmp/dcc.deb
 
-# ENV PATH "$PATH:/root/bin"
+COPY dcc-help /opt/dcc-help
+RUN chmod 755 /opt/dcc-help/dcc-help /opt/dcc-help/query_chatgpt.py /opt/dcc-help/helper \
+ && ln -s /opt/dcc-help/dcc-help          /usr/bin/ \
+ && ln -s /opt/dcc-help/query_chatgpt.py  /usr/bin/ \
+ && ln -s /opt/dcc-help/helper            /usr/bin/dcc-compile-helper \
+ && ln -s /opt/dcc-help/helper            /usr/bin/dcc-runtime-helper
 
-COPY dcc-help /root/dcc-help
-RUN chmod +x /root/dcc-help/dcc-help /root/dcc-help/query_chatgpt.py /root/dcc-help/helper
+COPY compile.sh /opt/compile.sh
+RUN chmod 755 /opt/compile.sh
+RUN mkdir -p /tmp && chmod 1777 /tmp
 
-RUN ln -s /root/dcc-help/dcc-help /usr/bin/
-RUN ln -s /root/dcc-help/query_chatgpt.py /usr/bin/
-RUN ln -s /root/dcc-help/helper /usr/bin/dcc-compile-helper
-RUN ln -s /root/dcc-help/helper /usr/bin/dcc-runtime-helper
+FROM gcr.io/distroless/cc-debian12:nonroot
 
-COPY compile.sh /root/compile.sh
-RUN chmod +x /root/compile.sh
+# If we wanted to be a little more secure, we could try to pick and choose just files we need, 
+# instead if copying all of this. Not sure it's worth it.
+COPY --from=build /usr /usr
+COPY --from=build /lib  /lib
+COPY --from=build /lib64 /lib64  
+COPY --from=build /opt /opt
+COPY --from=build /bin/bash /bin/bash
 
-WORKDIR /root
+COPY --from=build /tmp /tmp
 
-# Optional:
-# RUN apt install -y zsh
-# COPY zshrc /root/.zshrc
+ENV PATH="/usr/bin:/usr/local/bin"
+WORKDIR /workspace
+
+# TODO: Remove this:
+ENV OLLAMA_HOST=http://host.docker.internal:11434
+
+ENTRYPOINT ["/opt/compile.sh"]
