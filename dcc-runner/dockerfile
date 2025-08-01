@@ -26,6 +26,10 @@ RUN chmod 755 /opt/dcc-help/dcc-help /opt/dcc-help/query_chatgpt.py /opt/dcc-hel
  && ln -s /opt/dcc-help/helper            /usr/bin/dcc-compile-helper \
  && ln -s /opt/dcc-help/helper            /usr/bin/dcc-runtime-helper
 
+RUN ln -s -f /opt/dcc-help/gcc /usr/bin/gcc \
+ && chmod 755 /usr/bin/gcc
+
+
 # Might be able to remove this later:
 RUN apt-get install -y busybox
 

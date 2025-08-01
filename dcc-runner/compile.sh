@@ -4,6 +4,8 @@ SOURCE_FILE="/tmp/main.c"
 STDIN_FILE="/tmp/stdin"
 OUT_FILE="/tmp/out"
 
+SAFE_CFLAGS="-std=c11 -Wall -Wextra -Werror -fno-asm -fno-gnu-inline-asm -fno-gnu89-inline -fno-builtin -fno-delete-null-pointer-checks"
+
 read -r json
 
 echo "$json" | jq -r '.source' > $SOURCE_FILE
@@ -28,7 +30,8 @@ function run_dcc_help() {
 
 # temporarily comment out dcc stuff so we can run the program instead 
 # Try to compile
-if ! dcc -Werror "$SOURCE_FILE" -o "$OUT_FILE" 2>"$COMPILE_ERRORS"; then
+# shellcheck disable=SC2086
+if ! dcc $SAFE_CFLAGS "$SOURCE_FILE" -o "$OUT_FILE" 2>"$COMPILE_ERRORS"; then
   echo "[!] Compilation failed"
   cat "$COMPILE_ERRORS"
   run_dcc_help
@@ -36,7 +39,7 @@ if ! dcc -Werror "$SOURCE_FILE" -o "$OUT_FILE" 2>"$COMPILE_ERRORS"; then
 fi
 
 # Try to run
-if ! timeout 5s "$OUT_FILE" < "$STDIN_FILE" > "$PROGRAM_OUTPUT" 2>"$PROGRAM_ERRORS"; then
+if ! timeout  -k 2s 5s "$OUT_FILE" < "$STDIN_FILE" > "$PROGRAM_OUTPUT" 2>"$PROGRAM_ERRORS"; then
   cat $PROGRAM_OUTPUT
   echo "[!] Runtime error or timeout"
   cat "$PROGRAM_ERRORS"

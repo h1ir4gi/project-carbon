@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# path to GCC binary.
+REAL_GCC="/usr/bin/gcc-12"
+
+# Remove "-fno-gnu-inline-asm"
+new_args=()
+for arg in "$@"; do
+    [[ "$arg" == "-fno-gnu-inline-asm" ]] && continue
+    new_args+=("$arg")
+done
+
+exec "$REAL_GCC" "${new_args[@]}"
