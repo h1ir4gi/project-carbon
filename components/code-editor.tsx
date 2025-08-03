@@ -50,12 +50,8 @@ export default function CodeEditor({
             setOutput(`❌ Error: ${err.error || "Unknown error"}`);
         } else {
             const data = await response.json();
-            // Assuming data looks like { compile_status, output, errors }
-            if (data.compile_status === "success") {
-                setOutput(data.output);
-            } else {
-                setOutput(`Compilation Error:\n${data.error_details.compiler_message}`);
-            }
+            // console.log(data);  
+            setOutput(data);
         }
         } catch (error: unknown) {
             if (error instanceof Error) {

@@ -8,9 +8,9 @@ RUN apt-get update \
         libclang-common-14-dev libclang-rt-14-dev \
         gcc gdb jq python3-pip
 
-# Install ollama
-RUN curl -fsSL https://ollama.com/install.sh | sh \
- && python3 -m pip install --break-system-packages ollama
+# # Install ollama
+# RUN curl -fsSL https://ollama.com/install.sh | sh \
+#  && python3 -m pip install --break-system-packages ollama
 
 
 # Install dcc
@@ -20,9 +20,8 @@ RUN curl -L https://github.com/COMP1511UNSW/dcc/releases/download/2.37/dcc_2.37_
  && rm /tmp/dcc.deb
 
 COPY dcc-help /opt/dcc-help
-RUN chmod 755 /opt/dcc-help/dcc-help /opt/dcc-help/query_chatgpt.py /opt/dcc-help/helper \
- && ln -s /opt/dcc-help/dcc-help          /usr/bin/ \
- && ln -s /opt/dcc-help/query_chatgpt.py  /usr/bin/ \
+RUN chmod 755 /opt/dcc-help/helper /opt/dcc-help/print_template.py \
+ && ln -s /opt/dcc-help/print_template.py  /usr/bin/ \
  && ln -s /opt/dcc-help/helper            /usr/bin/dcc-compile-helper \
  && ln -s /opt/dcc-help/helper            /usr/bin/dcc-runtime-helper
 
@@ -35,7 +34,7 @@ RUN apt-get install -y busybox
 
 COPY compile.sh /opt/compile.sh
 RUN chmod 755 /opt/compile.sh
-RUN mkdir -p /tmp && chmod 1777 /tmp
+# RUN mkdir -p /tmp && chmod 1777 /tmp
 
 FROM gcr.io/distroless/cc-debian12:nonroot
 
@@ -48,12 +47,12 @@ COPY --from=build /opt /opt
 COPY --from=build /bin/bash /bin/bash
 COPY --from=build /bin/sh /bin/sh
 
-COPY --from=build /tmp /tmp
+# COPY --from=build /tmp /tmp
 
 ENV PATH="/usr/bin:/usr/local/bin"
-WORKDIR /workspace
+WORKDIR "/home/nonroot"
 
 # TODO: Remove this:
-ENV OLLAMA_HOST=http://host.docker.internal:11434
+# ENV OLLAMA_HOST=http://host.docker.internal:11434
 
 ENTRYPOINT ["/opt/compile.sh"]

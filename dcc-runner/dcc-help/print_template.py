@@ -1,16 +1,10 @@
 #!/usr/bin/python3
-#!/usr/bin/env python
-# MAX_JSON_BYTES = 1000000
 
 import argparse, json, re, sys
 from string import Template
-from ollama import chat
 
-MODEL="hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q4_K_M"
-DEFAULT_TEMP = 1.0
-# MAX_TOKENS = 250
-
-
+# MODEL="hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q4_K_M"
+# from ollama import chat
 
 RESPONSE_STRUCTURE='''\
 Without providing the solution, give me guidance on how to resolve this error, in the following structure.
@@ -23,7 +17,6 @@ Without providing the solution, give me guidance on how to resolve this error, i
 6. Follow with 1-2 short sentences, giving debugging hints and guidance. This can include specific references to my code.
 '''
 
-# define strict response structure
 PROMPT = {
 "system_content": '''\
 You explain programming error messages to introductory programming students.
@@ -83,53 +76,24 @@ RESPONSE_STRUCTURE
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
+    gen_from_stdin()
 
-    parser.add_argument("--dryrun", action="store_true", help="print prompt and exit")
-    parser.add_argument("--temperature", default=DEFAULT_TEMP, type=float)
-    # parser.add_argument("--template", default="default", choices=Prompts.keys())
-    parser.add_argument("--model", default=MODEL)
-    # parser.add_argument("--max-tokens", default=MAX_TOKENS, type=int)
+def gen_from_stdin():
 
-    args = parser.parse_args()
+    info = json.load(sys.stdin)
 
-    gen_from_stdin(args)
+    user_content = get_user_content(info)
+    # query_chatgpt(user_content, info)
+    print(PROMPT["system_content"] + user_content)
 
 
-def add_boolean_argument(parser, name, default=False, help=None, **kwargs):
-    parser.add_argument(
-        f"--{name}", action="store_true", default=default, help=help, **kwargs
-    )
-    parser.add_argument(
-        f"--no-{name}", dest=f"{name.replace('-','_')}", action="store_false"
-    )
-
-def gen_from_stdin(args):
-
-    try:
-        info = json.load(sys.stdin)
-    except json.decoder.JSONDecodeError:
-        print("Json parse error:", file=sys.stderr)
-        sys.exit(1)
-
-    if "source" not in info and "query" in info:
-        info = info["query"]
-
-    # NOTE: some functions use a different version of `info`:
-    user_content = get_user_content(info, args)
-    query_chatgpt(user_content, info, args)
-
-
-def get_user_content(info, args):
+def get_user_content(info):
     implementation = info.get("implementation", "dcc")
 
     if implementation == "dcc-compile":
-        return prompt_dcc_compile(info, args)
+        return prompt_dcc_compile(info)
     else:
-        # implementation == "dcc-runtime":
-        return prompt_dcc_runtime(info, args)
+        return prompt_dcc_runtime(info)
 
 
 
@@ -146,11 +110,11 @@ def evaluate_template(template: list[str], data):
     return "".join([evaluate(s) for s in template])
 
 # returns prefix + delimited compiler error + explanation (if it exists)
-def prompt_dcc_compile(info, args):
+def prompt_dcc_compile(info):
     return evaluate_template(PROMPT["compile_user_content"], info)
 
 
-def prompt_dcc_runtime(info, args):
+def prompt_dcc_runtime(info):
 
     argv = info.get("argv", "")
     data = {**info,"args": " ".join(argv)} if len(argv) > 1 else info
@@ -158,27 +122,24 @@ def prompt_dcc_runtime(info, args):
 
 # removes triple backticks, and anything after them.
 def delimit(s):
-    # if s and not s.endswith("\n"):
     s = s.strip()
 
     s = re.sub(r"^\s*```[^\n]*\n", "", s, flags=re.M)
 
     return s
 
-def query_chatgpt(user_content, info, args):
+# def query_chatgpt(user_content):
 
-    response = chat(
-        model=args.model,
-        messages=[{"role": "system", "content": PROMPT["system_content"]},
-            {"role": "user", "content": user_content},
-        ],
-        stream=True,
-        options={"temperature": args.temperature}
-    )
-    # print(response.message.content)
+    # response = chat(
+    #     model=MODEL,
+    #     messages=[{"role": "system", "content": PROMPT["system_content"]},
+    #         {"role": "user", "content": PROMPT["system_content"] + user_content},
+    #     ],
+    #     stream=True,
+    # )
 
-    for chunk in response:
-        print(chunk['message']['content'], end='', flush=True)
+    # for chunk in response:
+    #     print(chunk['message']['content'], end='', flush=True)
 
 if __name__ == "__main__":
     main()
