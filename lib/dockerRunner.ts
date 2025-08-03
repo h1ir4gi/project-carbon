@@ -1,7 +1,7 @@
 import {promisify} from "util";
 import { exec } from "child_process";
 
-import ollama from 'ollama';
+import {Ollama} from 'ollama';
 
 
 // const MODEL = 'hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q4_K_M';
@@ -12,6 +12,8 @@ import ollama from 'ollama';
 const MODEL = 'E4B:Q4_K_M';
 
 const asyncExec = promisify(exec);
+
+const ollama = new Ollama({ host: process.env.OLLAMA_HOST ?? 'http://ollama:11434' })
 
 // type LogField = string | number | boolean | string[];
 // type LogType = Record<string, LogField>;
@@ -50,8 +52,6 @@ export async function runUserCodeInDocker(source: string, stdin: string): Promis
       return e.stderr ?? "An unexpected error occurred";
     }
 }
-
-
 
 async function query_ollama(prompt:string) {
 

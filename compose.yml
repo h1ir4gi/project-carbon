@@ -9,10 +9,18 @@ services:
     environment:
       NODE_ENV: production
       DOCKER_HOST: "unix:///var/run/docker.sock"
+      OLLAMA_HOST: http://ollama:11434
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./ollama:/models
-    deploy:
-      resources:
-        limits:
-          memory: 10g
+    depends_on:
+      - ollama
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama:/root/.ollama 
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 8g
