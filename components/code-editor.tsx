@@ -39,10 +39,10 @@ export default function CodeEditor({
         setIsCompiling(true);
         setOutput("✨ Starting compilation...\n");
 
+        const apiBase = process.env.NEXTJS_API_BASE ?? '/api';
+
         try {
-        // const response = await fetch("/api/compile", {
-        // This looks wrong, but nginx maps it correctly.
-        const response = await fetch("/project-carbon/api/compile", {
+        const response = await fetch(apiBase + "/compile", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ source: code, stdin }),
