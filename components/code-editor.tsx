@@ -6,6 +6,7 @@ import { StdinTextarea } from "./stdin-textarea";
 import CompileButton from "./compile-button";
 import { examplePrograms } from "./example-programs";
 import DropdownMenu from "./dropdown-menu";
+import { Toaster } from "react-hot-toast";
 
 const defaultCode = `#include <stdio.h>
 
@@ -83,6 +84,7 @@ export default function CodeEditor({
             </div>
             <div className="bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
                 <StdinTextarea stdin={stdin} setStdin={setStdin} />
+                <Toaster />
             </div>
             <div className="p-6 bg-white/60 backdrop-blur-sm border-t border-slate-200/60">
                 <CompileButton

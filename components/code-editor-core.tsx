@@ -1,10 +1,12 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { EditorView } from "@codemirror/view";
+import { EditorState, Transaction } from "@codemirror/state";
+import toast from "react-hot-toast";
 
 const maxCharLimit = 10000;
 
@@ -14,23 +16,39 @@ interface CodeEditorProps {
 }
 
 export default function CodeEditor({ value, onChange }: CodeEditorProps) {
-
     const handleChange = useCallback(
         (val: string) => {
-            if (val.length <= maxCharLimit) {
-                onChange(val);
-            }
+            onChange(val);
         },
         [onChange]
     );
 
-    /* choose theme lazily to avoid re-creating extensions on every render */
+    const limitInputExtension = useMemo(() => EditorState.transactionFilter.of((tr: Transaction) => {
+        const newText = tr.newDoc.toString();
+        if (tr.docChanged && newText.length > maxCharLimit) {
+            toast.error("Character limit reached", {
+                id: "character-limit-error",
+                position: "top-right",
+                style: {
+                    backgroundColor: "#ffe0e0",
+                    color: "#c00",
+                    border: "1px solid #c00",
+                    fontSize: "14px",
+                  },
+              });
+            return []; 
+        }
+        return tr;
+    }), []);
+
     const extensions = useMemo(() => [
         cpp(),
         EditorView.theme({
             ".cm-scroller": { paddingBottom: "25em" },
         }),
-    ], ["25em"]);
+        limitInputExtension,
+    ], [limitInputExtension]);
+
     const cmTheme = vscodeLight;
 
     return (
