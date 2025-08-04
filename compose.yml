@@ -1,7 +1,7 @@
 
 
 services:
-  tunnel:
+  carbon-tunnel:
     image: alpine:3.20
     restart: unless-stopped
     secrets:
@@ -32,7 +32,7 @@ services:
       start_period: 10s
     # volumes:
     #   - ./ssh:/root/.ssh:ro
-  app:
+  carbon-app:
     build: .
     ports:
       - "3000:3000"
@@ -40,12 +40,12 @@ services:
       NODE_ENV: production
       DOCKER_HOST: "unix:///var/run/docker.sock"
       DCC_HELP_MODEL: "LorenzoLeeSolano/Gemma3N-E2B-DCCHelp:Q4_K_M"
-      OLLAMA_HOST: "http://tunnel:11434"
+      OLLAMA_HOST: "http://carbon-tunnel:11434"
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock
       - /run/user/1000/docker.sock:/var/run/docker.sock
     depends_on:
-      tunnel:
+      carbon-tunnel:
         condition: service_healthy
 secrets:
   tunnel_key:

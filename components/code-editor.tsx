@@ -39,7 +39,9 @@ export default function CodeEditor({
         setOutput("✨ Starting compilation...\n");
 
         try {
-        const response = await fetch("/api/compile", {
+        // const response = await fetch("/api/compile", {
+        // This looks wrong, but nginx maps it correctly.
+        const response = await fetch("/project-carbon/api/compile", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ source: code, stdin }),

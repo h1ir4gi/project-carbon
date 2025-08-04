@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // basePath: '/project-carbon',
+  assetPrefix: '/project-carbon',
   eslint: {
     ignoreDuringBuilds: true,
   },
