@@ -1,5 +1,7 @@
 Dockerfile
 docker-compose.yml
+compose.yml
+ssh/
 .git
 node_modules/
 .vscode/

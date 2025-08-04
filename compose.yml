@@ -1,21 +1,52 @@
 
 
 services:
+  tunnel:
+    image: alpine:3.20
+    restart: unless-stopped
+    secrets:
+      - tunnel_key
+    # command: >
+    #   sh -c "apk update && apk add --no-cache openssh-client curl autossh &&
+    #          mkdir -p /root/.ssh &&
+    #          chmod 700 /root/.ssh &&
+    #          cp /run/secrets/tunnel_key /root/.ssh/id_rsa &&
+    #          chmod 600 /root/.ssh/id_rsa &&
+    #          ssh -o StrictHostKeyChecking=no -N -L 0.0.0.0:11434:localhost:11572 enzo@gx13.cse.unsw.edu.au"
+    command: >
+      sh -c 'apk update && apk add --no-cache openssh-client curl autossh &&
+             mkdir -p /root/.ssh &&
+             chmod 700 /root/.ssh &&
+             cp /run/secrets/tunnel_key /root/.ssh/id_rsa &&
+             chmod 600 /root/.ssh/id_rsa &&
+             autossh -M 0  \
+             -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
+             -o ExitOnForwardFailure=yes \
+             -o StrictHostKeyChecking=no \
+             -N -L 0.0.0.0:11434:localhost:11572 enzo@gx13.cse.unsw.edu.au'
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    # volumes:
+    #   - ./ssh:/root/.ssh:ro
   app:
     build: .
     ports:
       - "3000:3000"
-      - "11434:11434"
-    # user: "1001:101"
     environment:
       NODE_ENV: production
       DOCKER_HOST: "unix:///var/run/docker.sock"
-      DCC_MODEL: "unix:///var/run/docker.sock"
-      OLLAMA_HOST: "http://host.docker.internal:11434"
+      DCC_HELP_MODEL: "LorenzoLeeSolano/Gemma3N-E2B-DCCHelp:Q4_K_M"
+      OLLAMA_HOST: "http://tunnel:11434"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      # - /run/user/1000/docker.sock:/var/run/docker.sock
-    # deploy:
-    #   resources:
-    #     limits:
-    #       memory: 10g
+      # - /var/run/docker.sock:/var/run/docker.sock
+      - /run/user/1000/docker.sock:/var/run/docker.sock
+    depends_on:
+      tunnel:
+        condition: service_healthy
+secrets:
+  tunnel_key:
+    file: ./ssh/id_ed25519

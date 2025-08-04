@@ -61,6 +61,8 @@ COPY --from=builder /app/.next/static ./.next/static
 
 # EXPOSE 3000
 
+RUN apt-get install -y --no-install-recommends curl iproute2
+
 CMD ["node", "server.js"]
 
 # COPY entrypoint.sh /entrypoint.sh
