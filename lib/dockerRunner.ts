@@ -9,7 +9,7 @@ import ollama from 'ollama';
 // const MODEL = 'E4B-Q8_0';
 // const MODEL = 'hf.co/z5258621/gemma-3N-finetune-test2-gguf:F16';
 // const MODEL = 'E4B-test-quant';
-const MODEL = 'E4B:Q4_K_M';
+const MODEL =  process.env.API_KEY ?? 'LorenzoLeeSolano/Gemma3N-E2B-DCCHelp:Q4_K_M';
 
 const asyncExec = promisify(exec);
 

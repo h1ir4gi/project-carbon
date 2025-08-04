@@ -44,10 +44,9 @@ ENV PORT=3000 HOSTNAME=0.0.0.0
 ENV PATH=/usr/local/bin:$PATH
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl docker.io ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends docker.io
 
-RUN curl -fsSL https://ollama.com/install.sh | sh
+# RUN curl -fsSL https://ollama.com/install.sh | sh
 
 # Create non-root user
 # RUN groupadd --system --gid 1001 nodejs && \
@@ -62,7 +61,7 @@ COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
 
-# CMD ["node", "server.js"]
+CMD ["node", "server.js"]
 
-COPY entrypoint.sh /entrypoint.sh
-CMD ["/entrypoint.sh"]
+# COPY entrypoint.sh /entrypoint.sh
+# CMD ["/entrypoint.sh"]

@@ -5,14 +5,16 @@ services:
     build: .
     ports:
       - "3000:3000"
+      - "11434:11434"
     # user: "1001:101"
     environment:
       NODE_ENV: production
       DOCKER_HOST: "unix:///var/run/docker.sock"
+      DCC_: "unix:///var/run/docker.sock"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./ollama:/models
-    deploy:
-      resources:
-        limits:
-          memory: 10g
+      # - /run/user/1000/docker.sock:/var/run/docker.sock
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 10g
