@@ -10,7 +10,8 @@ services:
     environment:
       NODE_ENV: production
       DOCKER_HOST: "unix:///var/run/docker.sock"
-      DCC_: "unix:///var/run/docker.sock"
+      DCC_MODEL: "unix:///var/run/docker.sock"
+      OLLAMA_HOST: "http://host.docker.internal:11434"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       # - /run/user/1000/docker.sock:/var/run/docker.sock

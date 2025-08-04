@@ -1,15 +1,10 @@
 import {promisify} from "util";
 import { exec } from "child_process";
 
-import ollama from 'ollama';
+import {Ollama} from 'ollama';
 
-
-// const MODEL = 'hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q4_K_M';
-// const MODEL = 'hf.co/z5258621/gemma-3n-E4B-it-DCC-SFT-V2-gguf:Q8_0';
-// const MODEL = 'E4B-Q8_0';
-// const MODEL = 'hf.co/z5258621/gemma-3N-finetune-test2-gguf:F16';
-// const MODEL = 'E4B-test-quant';
-const MODEL =  process.env.API_KEY ?? 'LorenzoLeeSolano/Gemma3N-E2B-DCCHelp:Q4_K_M';
+const MODEL =  process.env.DCC_HELP_MODEL ?? 'LorenzoLeeSolano/Gemma3N-E2B-DCCHelp:Q4_K_M';
+const ollama = new Ollama({ host: process.env.OLLAMA_HOST ?? 'http://localhost:11434' })
 
 const asyncExec = promisify(exec);
 
@@ -61,7 +56,6 @@ async function query_ollama(prompt:string) {
     messages: [
       { role: 'user', content: prompt }
     ],
-    keep_alive: "1h",
     stream: false
   });
 
