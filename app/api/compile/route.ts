@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { runUserCodeInDocker } from '@/lib/dockerRunner'
 
-const MAX_SOURCE_LEN = 10000
-const MAX_STDIN_LEN = 100
+const MAX_SOURCE_LEN = Number(process.env.MAX_SOURCE_LEN) || 10000;
+const MAX_STDIN_LEN = 100;
 
 export async function POST(req: NextRequest) {
     let source, stdin;

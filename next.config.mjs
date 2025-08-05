@@ -7,6 +7,7 @@ const nextConfig = {
   assetPrefix: isProd ? '/project-carbon': '/',
   env: {
     NEXTJS_API_BASE: isProd ? '/project-carbon/api' : '/api',
+    MAX_SOURCE_LEN: "5000"
   },
   eslint: {
     ignoreDuringBuilds: true,

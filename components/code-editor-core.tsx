@@ -8,7 +8,8 @@ import { EditorView } from "@codemirror/view";
 import { EditorState, Transaction } from "@codemirror/state";
 import toast from "react-hot-toast";
 
-const maxCharLimit = 10000;
+// NOTE: does lot allow maxCharLimit to be 0.
+const maxCharLimit = Number(process.env.MAX_SOURCE_LEN) || 10000;
 
 interface CodeEditorProps {
     value: string;
