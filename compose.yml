@@ -39,14 +39,14 @@ services:
     environment:
       NODE_ENV: production
       DOCKER_HOST: "unix:///var/run/docker.sock"
-      DCC_HELP_MODEL: "LorenzoLeeSolano/Gemma3N-E2B-DCCHelp:Q4_K_M"
+      DCC_HELP_MODEL: "hf.co/Project-Carbon/Gemma3N-E4B-DCCHelp-gguf:BF16"
       OLLAMA_HOST: "http://carbon-tunnel:11434"
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock
       - /run/user/1000/docker.sock:/var/run/docker.sock
-    depends_on:
-      carbon-tunnel:
-        condition: service_healthy
+    depends_on: [carbon-tunnel]
+      # carbon-tunnel:
+        # condition: service_healthy
 secrets:
   tunnel_key:
     file: ./ssh/id_ed25519
