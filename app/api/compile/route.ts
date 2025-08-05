@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const result = await runUserCodeInDocker(source, stdin)
-        return NextResponse.json(result)
+        return new NextResponse(result)
     } catch (error: any) {
         return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 })
     }

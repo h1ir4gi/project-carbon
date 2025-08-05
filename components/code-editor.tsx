@@ -52,9 +52,16 @@ export default function CodeEditor({
             const err = await response.json();
             setOutput(`❌ Error: ${err.error || "Unknown error"}`);
         } else {
-            const data = await response.json();
-            // console.log(data);  
-            setOutput(data);
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            if (reader) {
+                let { done, value } = await reader.read();
+                while (!done) {
+                    const text = decoder.decode(value);
+                    setOutput(prev => prev + text);
+                    ({done, value} = await reader.read());
+                }
+            }
         }
         } catch (error: unknown) {
             if (error instanceof Error) {
