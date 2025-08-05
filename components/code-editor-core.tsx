@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-// import { EditorView } from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
 import { EditorState, Transaction } from "@codemirror/state";
 import toast from "react-hot-toast";
 
@@ -16,16 +16,10 @@ interface CodeEditorProps {
 }
 
 export default function CodeEditor({ value, onChange }: CodeEditorProps) {
-    const handleChange = useCallback(
-        (val: string) => {
-            onChange(val);
-        },
-        [onChange]
-    );
 
-    const limitInputExtension = useMemo(() => EditorState.transactionFilter.of((tr: Transaction) => {
-        const newText = tr.newDoc.toString();
-        if (tr.docChanged && newText.length > maxCharLimit) {
+    const limitInputExtension = useMemo(() => EditorState.changeFilter.of((tr: Transaction) => {
+        const inputLen = tr.newDoc.length;
+        if (tr.docChanged && inputLen > maxCharLimit) {
             toast.error("Character limit reached", {
                 id: "character-limit-error",
                 position: "top-right",
@@ -36,16 +30,13 @@ export default function CodeEditor({ value, onChange }: CodeEditorProps) {
                     fontSize: "14px",
                   },
               });
-            return []; 
+            return false; 
         }
-        return tr;
+        return true;
     }), []);
 
     const extensions = useMemo(() => [
         cpp(),
-        // EditorView.theme({
-        //     ".cm-scroller": { paddingBottom: "25em" },
-        // }),
         limitInputExtension,
     ], [limitInputExtension]);
 
@@ -65,7 +56,7 @@ export default function CodeEditor({ value, onChange }: CodeEditorProps) {
                 syntaxHighlighting: true,
                 tabSize: 4,
             }}
-            onChange={handleChange}
+            onChange={onChange}
             className="rounded-lg"
         />
     );
