@@ -117,4 +117,5 @@ button:active:not(:disabled) {
 }
 
 .cm-editor { height: 100% }
-.cm-scroller { overflow: auto }
+.cm-theme { height: 100% }
+/* .cm-scroller { overflow: auto } */

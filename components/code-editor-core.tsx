@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { vscodeLight } from "@uiw/codemirror-theme-vscode";
-import { EditorView } from "@codemirror/view";
+// import { EditorView } from "@codemirror/view";
 import { EditorState, Transaction } from "@codemirror/state";
 import toast from "react-hot-toast";
 
@@ -43,9 +43,9 @@ export default function CodeEditor({ value, onChange }: CodeEditorProps) {
 
     const extensions = useMemo(() => [
         cpp(),
-        EditorView.theme({
-            ".cm-scroller": { paddingBottom: "25em" },
-        }),
+        // EditorView.theme({
+        //     ".cm-scroller": { paddingBottom: "25em" },
+        // }),
         limitInputExtension,
     ], [limitInputExtension]);
 
