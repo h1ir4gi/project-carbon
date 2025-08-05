@@ -5,7 +5,16 @@ const MAX_SOURCE_LEN = 10000
 const MAX_STDIN_LEN = 100
 
 export async function POST(req: NextRequest) {
-    const { source, stdin = "" } = await req.json()
+    let source, stdin;
+    try {
+       ({ source, stdin = "" } = await req.json());
+    } catch (error:any) {
+        return NextResponse.json(
+            // This error message could be better.
+            { error: `Invalid POST request body` },
+            { status: 400 }
+        )
+    }
 
     if (!source || typeof source !== "string") {
         return NextResponse.json({ error: "Source code is required" }, { status: 400 })
