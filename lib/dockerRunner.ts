@@ -3,7 +3,7 @@ import { exec } from "child_process";
 
 import {Ollama} from 'ollama';
 
-const MODEL =  process.env.DCC_HELP_MODEL ?? 'LorenzoLeeSolano/Gemma3N-E2B-DCCHelp:Q4_K_M';
+const MODEL =  process.env.DCC_HELP_MODEL ?? 'hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q4_K_M';
 const ollama = new Ollama({ host: process.env.OLLAMA_HOST ?? 'http://localhost:11434' })
 
 const asyncExec = promisify(exec);
