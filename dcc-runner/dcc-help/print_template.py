@@ -1,10 +1,7 @@
 #!/usr/bin/python3
 
-import argparse, json, re, sys
+import json, re, sys
 from string import Template
-
-# MODEL="hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q4_K_M"
-# from ollama import chat
 
 RESPONSE_STRUCTURE='''\
 Without providing the solution, give me guidance on how to resolve this error, in the following structure.
@@ -83,7 +80,6 @@ def gen_from_stdin():
     info = json.load(sys.stdin)
 
     user_content = get_user_content(info)
-    # query_chatgpt(user_content, info)
     print(PROMPT["system_content"] + user_content)
 
 
@@ -127,19 +123,5 @@ def delimit(s):
     s = re.sub(r"^\s*```[^\n]*\n", "", s, flags=re.M)
 
     return s
-
-# def query_chatgpt(user_content):
-
-    # response = chat(
-    #     model=MODEL,
-    #     messages=[{"role": "system", "content": PROMPT["system_content"]},
-    #         {"role": "user", "content": PROMPT["system_content"] + user_content},
-    #     ],
-    #     stream=True,
-    # )
-
-    # for chunk in response:
-    #     print(chunk['message']['content'], end='', flush=True)
-
 if __name__ == "__main__":
     main()
