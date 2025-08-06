@@ -1,0 +1,17 @@
+services:
+  dcc-help-builder:
+    build:
+      context: ./dcc-help
+      target: base
+    image: dcc-help:base
+    # exit immediately once images are built.
+    entrypoint: ["true"]
+    # profiles: ["build-runner"]
+  dcc-runner-builder:
+    build:
+      context: ./dcc-runner
+    image: dcc-runner
+    entrypoint: ["true"]
+    depends_on:
+      - dcc-help
+    # profiles: ["build-runner"]

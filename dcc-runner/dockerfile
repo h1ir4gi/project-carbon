@@ -1,26 +1,5 @@
-FROM debian:12-slim AS build
+FROM dcc-help:base AS build
 
-# Install dependencies
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
- && apt-get -y dist-upgrade --no-install-recommends \
- && apt-get install -y --no-install-recommends \
-        curl python3 clang valgrind \
-        libclang-common-14-dev libclang-rt-14-dev \
-        gcc gdb jq python3-pip busybox
-
-# Install dcc + dcc-help
-COPY dcc-help-src /opt/dcc-help
-RUN bash /opt/dcc-help/build.sh
-# RUN chmod 755 /opt/dcc-help/helper /opt/dcc-help/print_template.py \
-#  && ln -s /opt/dcc-help/print_template.py  /usr/bin/ \
-#  && ln -s /opt/dcc-help/helper             /usr/bin/dcc-compile-helper \
-#  && ln -s /opt/dcc-help/helper             /usr/bin/dcc-runtime-helper
-
-
-# # Install ollama
-# RUN curl -fsSL https://ollama.com/install.sh | sh \
-#  && python3 -m pip install --break-system-packages ollama
 
 # Helper for website runtime:
 COPY runner-src/* /opt/dcc-help/lib
@@ -32,15 +11,11 @@ FROM gcr.io/distroless/cc-debian12:nonroot
 COPY --from=build /usr /usr
 COPY --from=build /lib  /lib
 COPY --from=build /lib64 /lib64
-# TODO maybe don't copy all of opt?
 COPY --from=build /opt /opt
 COPY --from=build /bin/bash /bin/bash
 COPY --from=build /bin/sh /bin/sh
 
 ENV PATH="/opt/dcc-help/lib:/usr/local/bin:/usr/bin/"
 WORKDIR "/home/nonroot"
-
-# TODO: Remove this:
-# ENV OLLAMA_HOST=http://host.docker.internal:11434
 
 ENTRYPOINT ["/opt/compile.sh"]

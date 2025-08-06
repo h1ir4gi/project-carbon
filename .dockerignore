@@ -4,6 +4,8 @@ compose.yml
 ssh/
 .git
 node_modules/
+dcc-help/
+dcc-runner
 .vscode/
 .next/
 .gitignore
