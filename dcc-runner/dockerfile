@@ -18,4 +18,4 @@ COPY --from=build /bin/sh /bin/sh
 ENV PATH="/opt/dcc-help/lib:/usr/local/bin:/usr/bin/"
 WORKDIR "/home/nonroot"
 
-ENTRYPOINT ["/opt/compile.sh"]
+ENTRYPOINT ["/opt/dcc-help/lib/compile.sh"]

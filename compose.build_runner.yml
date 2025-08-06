@@ -13,5 +13,5 @@ services:
     image: dcc-runner
     entrypoint: ["true"]
     depends_on:
-      - dcc-help
+      - dcc-help-builder
     # profiles: ["build-runner"]
