@@ -18,7 +18,6 @@ PROGRAM_ERRORS="/home/nonroot/program_errors.txt"
 COMPILE_ERRORS="/home/nonroot/compile_errors.txt"
 
 get_log_file() {
-    PATH=/bin:/usr/bin:"$PATH"
     saved_json="${XDG_CACHE_HOME-$HOME/.cache}/dcc.json"
 
     if  [ ! -r "$saved_json" ] || [ ! -s "$saved_json" ]; then
@@ -31,10 +30,9 @@ get_log_file() {
 # This could be done outside the image.
 generate_prompt() {
     log_file="$(get_log_file)"
-    print_template.py < "$log_file"
+    /opt/dcc-help/lib/query.py --dryrun < "$log_file" || exit 1
 }
 
-# temporarily comment out dcc stuff so we can run the program instead 
 # Try to compile
 # shellcheck disable=SC2086
 if ! dcc $SAFE_CFLAGS "$SOURCE_FILE" -o "$OUT_FILE" 2>"$COMPILE_ERRORS"; then
@@ -64,6 +62,6 @@ if ! timeout  -k 2s 5s "$OUT_FILE" < "$STDIN_FILE" > "$PROGRAM_OUTPUT" 2>"$PROGR
 fi
 
 jq -cRs '{
- "status": "success", # success
- "output": .
+    "status": "success", # success
+    "output": .
 }' "$PROGRAM_OUTPUT"

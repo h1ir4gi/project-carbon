@@ -23,7 +23,7 @@ export async function runUserCodeInDocker(source: string, stdin: string): Promis
     // cpu limit = 0.5 for single-threaded programs, which is the case for beginner C programs
     // setting memory-swap to the same value as memory avoids container from using swap memory
     // using --rm to automatically remove the container after it exits
-    const dockerCmd = `docker run --rm -i --memory=128mb --memory-swap=128m --cpus='0.5' --pids-limit 16 --network none --stop-timeout 1 --init dcc-runner-dcc_help_testing`;
+    const dockerCmd = `docker run --rm -i --memory=128mb --memory-swap=128m --cpus='0.5' --pids-limit 16 --network none --stop-timeout 1 --init dcc-runner`;
     try {
       const process = asyncExec(dockerCmd, { maxBuffer: 1024 * 1000, timeout: 15000 });
       process.child.stdin?.end(input + "\n");
