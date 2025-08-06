@@ -1,6 +1,7 @@
 "use client"
 
 import { Code, Sparkles } from "lucide-react";
+const assetPath = process.env.NEXTJS_PUBLIC_BASE ?? "";
 
 export default function Header() {
     return (
@@ -8,7 +9,7 @@ export default function Header() {
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-                        <img src="/logo.svg" />
+                        <img src={assetPath + "/logo.svg"} />
                     </div>
                     <h1 className="text-xl font-semibold text-slate-800">
                         dcc-help

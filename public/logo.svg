@@ -1,154 +1,50 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   id="_Слой_1"
-   data-name="Слой 1"
-   viewBox="0 0 900 900"
-   version="1.1"
-   sodipodi:docname="Logo-1.svg"
-   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
-   width="900"
-   height="900"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview23"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.43375048"
-     inkscape:cx="435.73439"
-     inkscape:cy="476.08016"
-     inkscape:window-width="1104"
-     inkscape:window-height="820"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="_Слой_1" />
-  <defs
-     id="defs8">
-    <style
-       id="style1">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 680.46 680.37">
+  <defs>
+    <style>
       .cls-1 {
-        fill: #060630;
+        fill: url(#_Безымянный_градиент_25);
       }
 
-      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+      .cls-1, .cls-2, .cls-3, .cls-4 {
         stroke-width: 0px;
       }
 
       .cls-2 {
-        fill: url(#_Безымянный_градиент_25);
-      }
-
-      .cls-3 {
         fill: url(#_Безымянный_градиент_24);
       }
 
-      .cls-4 {
+      .cls-3 {
         fill: url(#_Безымянный_градиент_22);
       }
 
-      .cls-5 {
+      .cls-4 {
         fill: url(#_Безымянный_градиент_14);
       }
     </style>
-    <linearGradient
-       id="_Безымянный_градиент_24"
-       data-name="Безымянный градиент 24"
-       x1="394.89001"
-       y1="450.37"
-       x2="394.89001"
-       y2="413.81"
-       gradientUnits="userSpaceOnUse">
-      <stop
-         offset="0"
-         stop-color="#9211f1"
-         id="stop1" />
-      <stop
-         offset="1"
-         stop-color="#3a7dfb"
-         id="stop2" />
+    <linearGradient id="_Безымянный_градиент_24" data-name="Безымянный градиент 24" x1="200.79" y1="340.23" x2="200.79" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9211f1"/>
+      <stop offset="1" stop-color="#3a7dfb"/>
     </linearGradient>
-    <linearGradient
-       id="_Безымянный_градиент_14"
-       data-name="Безымянный градиент 14"
-       x1="409.87"
-       y1="435.38"
-       x2="446.42999"
-       y2="435.38"
-       gradientUnits="userSpaceOnUse">
-      <stop
-         offset="0"
-         stop-color="#5800ff"
-         id="stop3" />
-      <stop
-         offset="1"
-         stop-color="#ff9511"
-         id="stop4" />
+    <linearGradient id="_Безымянный_градиент_14" data-name="Безымянный градиент 14" x1="340.23" y1="200.75" x2="680.46" y2="200.75" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5800ff"/>
+      <stop offset="1" stop-color="#ff9511"/>
     </linearGradient>
-    <linearGradient
-       id="_Безымянный_градиент_25"
-       data-name="Безымянный градиент 25"
-       x1="424.85999"
-       y1="486.92001"
-       x2="424.85999"
-       y2="450.37"
-       gradientUnits="userSpaceOnUse">
-      <stop
-         offset="0"
-         stop-color="#3a7dfb"
-         id="stop5" />
-      <stop
-         offset="1"
-         stop-color="#9211f1"
-         id="stop6" />
+    <linearGradient id="_Безымянный_градиент_25" data-name="Безымянный градиент 25" x1="479.67" y1="680.37" x2="479.67" y2="340.23" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3a7dfb"/>
+      <stop offset="1" stop-color="#9211f1"/>
     </linearGradient>
-    <linearGradient
-       id="_Безымянный_градиент_22"
-       data-name="Безымянный градиент 22"
-       x1="373.32001"
-       y1="465.35001"
-       x2="409.87"
-       y2="465.35001"
-       gradientUnits="userSpaceOnUse">
-      <stop
-         offset="0"
-         stop-color="#ff9511"
-         id="stop7" />
-      <stop
-         offset="1"
-         stop-color="#5800ff"
-         id="stop8" />
+    <linearGradient id="_Безымянный_градиент_22" data-name="Безымянный градиент 22" x1="0" y1="479.62" x2="340.23" y2="479.62" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff9511"/>
+      <stop offset="1" stop-color="#5800ff"/>
     </linearGradient>
   </defs>
-  <g
-     id="g11"
-     transform="matrix(8.9336327,0,0,8.9336327,-3199.1682,-3586.3877)">
-    <path
-       class="cls-3"
-       d="m 416.47,413.81 c 0,8.41 -2.41,16.26 -6.59,22.89 -3.46,5.52 -8.15,10.2 -13.66,13.67 -6.64,-4.18 -14.49,-6.59 -22.89,-6.59 15.45,0 28.21,-11.76 29.8,-26.8 0.19,-1.8 1.72,-3.17 3.54,-3.17 h 9.82 z"
-       id="path8"
-       style="fill:url(#_%D0%91%D0%B5%D0%B7%D1%8B%D0%BC%D1%8F%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82_24)" />
-    <path
-       class="cls-5"
-       d="m 446.43,447.14 c 0,-1.81 -1.36,-3.35 -3.17,-3.54 -15.04,-1.59 -26.8,-14.35 -26.8,-29.8 0,8.41 -2.41,16.26 -6.59,22.89 3.47,5.52 8.15,10.2 13.66,13.67 6.64,4.17 14.49,6.58 22.89,6.58 v -9.81 z"
-       id="path9"
-       style="fill:url(#_%D0%91%D0%B5%D0%B7%D1%8B%D0%BC%D1%8F%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82_14)" />
-    <path
-       class="cls-2"
-       d="m 446.43,456.95 c -15.45,0 -28.21,11.76 -29.8,26.8 -0.19,1.8 -1.72,3.17 -3.54,3.17 h -9.82 c 0,-8.4 2.42,-16.26 6.59,-22.89 3.47,-5.52 8.15,-10.2 13.66,-13.66 6.64,4.17 14.49,6.58 22.89,6.58"
-       id="path10"
-       style="fill:url(#_%D0%91%D0%B5%D0%B7%D1%8B%D0%BC%D1%8F%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82_25)" />
-    <path
-       class="cls-4"
-       d="m 396.21,450.37 c 5.52,3.46 10.19,8.14 13.66,13.66 -4.17,6.64 -6.59,14.49 -6.59,22.89 0,-15.45 -11.76,-28.21 -26.8,-29.8 -1.8,-0.19 -3.17,-1.72 -3.17,-3.54 v -9.81 c 8.4,0 16.26,2.41 22.89,6.59"
-       id="path11"
-       style="fill:url(#_%D0%91%D0%B5%D0%B7%D1%8B%D0%BC%D1%8F%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82_22)" />
+  <g id="_Слой_1" data-name="Слой 1">
+    <g>
+      <path class="cls-2" d="m401.58,0c0,78.29-22.46,151.29-61.36,213.06-32.21,51.36-75.81,94.88-127.16,127.17C151.29,301.33,78.2,278.87,0,278.87c143.81,0,262.56-109.45,277.33-249.41C279.1,12.68,293.35,0,310.23,0h91.35Z"/>
+      <path class="cls-4" d="m680.46,310.23c0-16.88-12.68-31.14-29.47-32.91C511.03,262.56,401.58,143.8,401.58,0c0,78.29-22.46,151.29-61.36,213.06,32.29,51.36,75.81,94.88,127.17,127.17,61.77,38.81,134.85,61.27,213.06,61.27v-91.27Z"/>
+      <path class="cls-1" d="m680.46,401.5c-143.81,0-262.57,109.44-277.33,249.41-1.77,16.79-16.03,29.47-32.91,29.47h-91.35c0-78.2,22.55-151.29,61.36-213.05,32.29-51.36,75.81-94.88,127.17-127.09,61.77,38.81,134.85,61.27,213.06,61.27"/>
+      <path class="cls-3" d="m213.06,340.23c51.36,32.21,94.88,75.73,127.16,127.09-38.8,61.76-61.36,134.85-61.36,213.05,0-143.81-109.44-262.56-249.41-277.33C12.68,401.28,0,387.02,0,370.14v-91.27c78.2,0,151.29,22.46,213.06,61.36"/>
+    </g>
   </g>
 </svg>
