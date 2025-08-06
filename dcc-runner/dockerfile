@@ -1,55 +1,43 @@
 FROM debian:12-slim AS build
 
+# Install dependencies
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get -y dist-upgrade --no-install-recommends \
  && apt-get install -y --no-install-recommends \
         curl python3 clang valgrind \
         libclang-common-14-dev libclang-rt-14-dev \
-        gcc gdb jq python3-pip
+        gcc gdb jq python3-pip busybox
+
+# Install dcc + dcc-help
+COPY dcc-help-src /opt/dcc-help
+RUN bash /opt/dcc-help/build.sh
+# RUN chmod 755 /opt/dcc-help/helper /opt/dcc-help/print_template.py \
+#  && ln -s /opt/dcc-help/print_template.py  /usr/bin/ \
+#  && ln -s /opt/dcc-help/helper             /usr/bin/dcc-compile-helper \
+#  && ln -s /opt/dcc-help/helper             /usr/bin/dcc-runtime-helper
+
 
 # # Install ollama
 # RUN curl -fsSL https://ollama.com/install.sh | sh \
 #  && python3 -m pip install --break-system-packages ollama
 
-
-# Install dcc
-RUN curl -L https://github.com/COMP1511UNSW/dcc/releases/download/2.37/dcc_2.37_all.deb \
-         -o /tmp/dcc.deb \
- && apt-get install -y --no-install-recommends /tmp/dcc.deb \
- && rm /tmp/dcc.deb
-
-COPY dcc-help /opt/dcc-help
-RUN chmod 755 /opt/dcc-help/helper /opt/dcc-help/print_template.py \
- && ln -s /opt/dcc-help/print_template.py  /usr/bin/ \
- && ln -s /opt/dcc-help/helper            /usr/bin/dcc-compile-helper \
- && ln -s /opt/dcc-help/helper            /usr/bin/dcc-runtime-helper
-
-RUN ln -s -f /opt/dcc-help/gcc /usr/bin/gcc \
- && chmod 755 /usr/bin/gcc
-
-
-# Might be able to remove this later:
-RUN apt-get install -y busybox
-
-COPY compile.sh /opt/compile.sh
-RUN chmod 755 /opt/compile.sh
-# RUN mkdir -p /tmp && chmod 1777 /tmp
+# Helper for website runtime:
+COPY runner-src/* /opt/dcc-help/lib
+RUN  chmod 755 /opt/dcc-help/lib/gcc /opt/dcc-help/lib/compile.sh
 
 FROM gcr.io/distroless/cc-debian12:nonroot
 
-# If we wanted to be a little more secure, we could try to pick and choose just files we need, 
-# instead if copying all of this. Not sure it's worth it.
+
 COPY --from=build /usr /usr
 COPY --from=build /lib  /lib
-COPY --from=build /lib64 /lib64  
+COPY --from=build /lib64 /lib64
+# TODO maybe don't copy all of opt?
 COPY --from=build /opt /opt
 COPY --from=build /bin/bash /bin/bash
 COPY --from=build /bin/sh /bin/sh
 
-# COPY --from=build /tmp /tmp
-
-ENV PATH="/usr/bin:/usr/local/bin"
+ENV PATH="/opt/dcc-help/lib:/usr/local/bin:/usr/bin/"
 WORKDIR "/home/nonroot"
 
 # TODO: Remove this:

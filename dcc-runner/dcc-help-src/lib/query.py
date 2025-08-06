@@ -3,8 +3,15 @@
 import argparse, json, re, sys
 from string import Template
 
-# MODEL="hf.co/unsloth/gemma-3n-E2B-it-GGUF:Q4_K_M"
-# from ollama import chat
+MAX_JSON_BYTES = 1000000
+DEFAULT_MODEL="hf.co/Project-Carbon/Gemma3N-E4B-DCCHelp-gguf:Q4_K_M"
+DEFAULT_SAMPLE_CONFIG={
+    'temperature': 1.0,
+    'top_k': 64,
+    'top_p': 0.95,
+    'min_p': 0.0,
+    'repeat_penalty': 1.0,
+}
 
 RESPONSE_STRUCTURE='''\
 Without providing the solution, give me guidance on how to resolve this error, in the following structure.
@@ -74,16 +81,51 @@ RESPONSE_STRUCTURE
 ]
 }
 
-
 def main():
-    gen_from_stdin()
+    try:
+        main1()
+    except KeyboardInterrupt:
+        pass
+    except KeyboardInterrupt:
+        pass
+    except Exception as e:
+        print(f"can not provide help -  internal error - {e}", file=sys.stderr)
+        sys.exit(1)
 
-def gen_from_stdin():
+def main1():
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
 
-    info = json.load(sys.stdin)
+    parser.add_argument("--dryrun", action="store_true", help="print prompt and exit")
+    parser.add_argument("--temperature", default=DEFAULT_SAMPLE_CONFIG["temperature"], type=float)
+    parser.add_argument("--top-k", default=DEFAULT_SAMPLE_CONFIG["top_k"], type=float)
+    parser.add_argument("--top-p", default=DEFAULT_SAMPLE_CONFIG["top_p"], type=float)
+    parser.add_argument("--min-p", default=DEFAULT_SAMPLE_CONFIG["min_p"], type=float)
+    parser.add_argument("--repeat-penalty", default=DEFAULT_SAMPLE_CONFIG["repeat_penalty"], type=float)
+    parser.add_argument("--model", default=DEFAULT_MODEL)
+
+    args = parser.parse_args()
+
+    gen_from_stdin(args)
+
+def gen_from_stdin(args):
+    try:
+                info = json.loads(sys.stdin.read(MAX_JSON_BYTES))
+    except json.decoder.JSONDecodeError:
+        print("can not provide help - saved data is invalid", file=sys.stderr)
+        sys.exit(1)
 
     user_content = get_user_content(info)
-    print(PROMPT["system_content"] + user_content)
+    prompt = PROMPT["system_content"] + user_content;
+    if args.dryrun:
+        print(prompt)
+    else:
+        try: 
+            generate_explanation(prompt, args)
+        except Exception:
+            print("can not provide help - generation model may be unavailable", file=sys.stderr)
+            sys.exit(1)
 
 
 def get_user_content(info):
@@ -108,24 +150,52 @@ def evaluate_template(template: list[str], data):
 
     return "".join([evaluate(s) for s in template])
 
-# returns prefix + delimited compiler error + explanation (if it exists)
+
 def prompt_dcc_compile(info):
+    if (not "compiler_message" in info):
+        print("can not provide help - saved data is invalid", file=sys.stderr)
+        exit(1)
     return evaluate_template(PROMPT["compile_user_content"], info)
 
 
 def prompt_dcc_runtime(info):
-
+    if (not "explanation" in info):
+        print("can not provide help - saved data is invalid", file=sys.stderr)
+        exit(1)
     argv = info.get("argv", "")
     data = {**info,"args": " ".join(argv)} if len(argv) > 1 else info
     return evaluate_template(PROMPT["runtime_user_content"], data)
 
-# removes triple backticks, and anything after them.
+
 def delimit(s):
     s = s.strip()
 
     s = re.sub(r"^\s*```[^\n]*\n", "", s, flags=re.M)
 
     return s
+
+
+def generate_explanation(user_content, args):
+    from ollama import chat
+
+    response = chat(
+        model=args.model,
+        messages=[{"role": "system", "content": PROMPT["system_content"]},
+            {"role": "user", "content": user_content},
+        ],
+        stream=True,
+        options={
+            'temperature': args.temperature,
+            'top_k': args.top_k,
+            'top_p': args.top_p,
+            'min_p': args.min_p,
+            'repeat_penalty': args.repeat_penalty,
+        }
+    )
+
+    for chunk in response:
+        print(chunk['message']['content'], end='', flush=True)
+
 
 if __name__ == "__main__":
     main()

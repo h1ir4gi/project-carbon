@@ -11,15 +11,7 @@ if test -t 2
 then
     ANSI_BOLD_BLACK="\e[1m"
     ANSI_END="\e[0m"
-# else
-#     test "$implementation" = dcc-runtime &&
-#         exit 0
 fi
-
-# don't offer help for class accounts
-# case "$LOGNAME" in
-# [a-z][a-z][0-9][0-9][0-9][0-9]*) exit 0
-# esac
 
 case "${HELPER_EXPLANATION-"$DCC_HELPER_EXPLANATION"}" in
 *"Execution was interrupted") exit 0
