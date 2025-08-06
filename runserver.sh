@@ -7,5 +7,6 @@ docker image build -t dcc-runner dcc-runner/
 npm run dev
 
 # In prod, do this instead:
+# Note that dcc-help:base image must be manually built before dcc-runner.
 # docker compose up --build -d
 

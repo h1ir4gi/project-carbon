@@ -1,5 +1,3 @@
-include: 
-  - compose.build_runner.yml
 services:
   carbon-tunnel:
     image: alpine:3.20
