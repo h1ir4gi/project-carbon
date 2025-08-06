@@ -4,6 +4,7 @@ FROM dcc-help:base AS build
 # Helper for website runtime:
 COPY runner-src/* /opt/dcc-help/lib
 RUN  chmod 755 /opt/dcc-help/lib/gcc /opt/dcc-help/lib/compile.sh
+RUN ln -s -f /opt/dcc-help/lib/gcc /usr/bin/gcc
 
 FROM gcr.io/distroless/cc-debian12:nonroot
 
